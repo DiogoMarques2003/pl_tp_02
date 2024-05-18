@@ -8,7 +8,7 @@ class ArithLexer:
         "FIM",  # atribuicao para o "FIM" das funções
         "FUNCAO",  # identificador de uma função
         "ESCREVER",  # identificador
-        "ID",  # identificador de variável ou função
+        "VAR_ID",  # identificador de variável ou função
         "COMENTARIO",  # identificador de um comentario
         "SE",  # identificador de uma confição if
         "SENAO",  # identificador de uma condição else
@@ -54,7 +54,7 @@ class ArithLexer:
         return t
 
     # Reconhecer uma variavel e função
-    def t_ID(self, t):
+    def t_VAR_ID(self, t):
         # Deve iniciar por letra minuscula ou _
         # Depois pode ter qualquer letra minuscula/maiuscula e números
         # Pode terminar com ? ou !
