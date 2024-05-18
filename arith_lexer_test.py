@@ -42,4 +42,26 @@ while True:
         break
     print(tk, end="")
 
+print("\n-------\n")
+al.input("""_cart? = 10, _cart! = 20;
+            FUNCAO soma (a, b)
+                a + b
+            FIM
+            _Soma = soma(_cart?, _cart!)""")
 
+while True:
+    tk = al.token()
+    if not tk:
+        break
+    print(tk, end="")
+
+print("\n-------\n")
+al.input("""_cart? = 10, _cart! = 20;
+            FUNCAO soma (a, b) :, a + b;
+            _Soma = soma(_cart?, _cart!)""")
+
+while True:
+    tk = al.token()
+    if not tk:
+        break
+    print(tk, end="")
