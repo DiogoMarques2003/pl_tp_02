@@ -14,6 +14,8 @@ class ArithLexer:
         "SENAO",  # identificador de uma condição else
         "NEG",  # Negação da condição do if
         "ENTRADA",  # Identificador para input de dados
+        "MAP",  # Identificador para a função MAP
+        "FOLD",  # Identificador para a função FOLD
     )
 
     literals = [
@@ -33,7 +35,7 @@ class ArithLexer:
     ]
 
     # Ignorar espacos
-    t_ignore = " "
+    t_ignore = " \n"
 
     # Inicializa o lexer como None
     def __init__(self):
@@ -80,7 +82,7 @@ class ArithLexer:
         # Reconhece comentários de uma linha iniciados por '--'
         # Reconhece comentários multilinha delimitados por '{--' e '--}'
         r"(--[^\n]*|{--.*?--})"
-        return t
+        pass # Ignora os comentários
 
     #Reconhecedor de SE
     def t_SE(self, t):
@@ -100,6 +102,16 @@ class ArithLexer:
     #Reconhecedor de ENTRADA
     def t_ENTRADA(self, t):
         r"(ENT)RADA"
+        return t
+
+    #Reconhecedor de MAP
+    def t_MAP(self, t):
+        r"MAP"
+        return t
+
+    #Reconhecedor de FOLD
+    def t_FOLD(self, t):
+        r"FOLD"
         return t
 
     # cria o lexer
