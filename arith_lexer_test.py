@@ -65,3 +65,12 @@ while True:
     if not tk:
         break
     print(tk, end="")
+
+print("\n-------\n")
+al.input("""ESC("Teste")""")
+
+while True:
+    tk = al.token()
+    if not tk:
+        break
+    print(tk, end="")
