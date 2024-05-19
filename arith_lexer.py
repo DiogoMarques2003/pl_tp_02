@@ -16,6 +16,7 @@ class ArithLexer:
         "ENTRADA",  # Identificador para input de dados
         "MAP",  # Identificador para a função MAP
         "FOLD",  # Identificador para a função FOLD
+        "CONCAT",  #Identificador de concatnação
     )
 
     literals = [
@@ -45,7 +46,11 @@ class ArithLexer:
     # Reconhecer numeros inteiros e decimais
     def t_NUM(self, t):
         r"[0-9]+(\.[0-9]+)?"
-        t.value = int(t.value)
+        if '.' in t.value:
+            t.value = float(t.value)  # Se o número tiver "." converte para floar
+        else:
+            t.value = int(t.value)  # senão converte para int
+
         return t
 
     # Reconhecer a Palavra ESC ou ESCREVER
@@ -83,7 +88,7 @@ class ArithLexer:
         # Reconhece comentários de uma linha iniciados por '--'
         # Reconhece comentários multilinha delimitados por '{--' e '--}'
         r"(--[^\n]*|{--.*?--})"
-        pass # Ignora os comentários
+        return t
 
     #Reconhecedor de SE
     def t_SE(self, t):
@@ -102,7 +107,7 @@ class ArithLexer:
 
     #Reconhecedor de ENTRADA
     def t_ENTRADA(self, t):
-        r"(ENT)RADA"
+        r"ENT(RADA)?"
         return t
 
     #Reconhecedor de MAP
@@ -113,6 +118,11 @@ class ArithLexer:
     #Reconhecedor de FOLD
     def t_FOLD(self, t):
         r"FOLD"
+        return t
+
+    #Reconhecedor de CONCAT
+    def t_CONCAT(self, t):
+        r'<>'
         return t
 
     # cria o lexer

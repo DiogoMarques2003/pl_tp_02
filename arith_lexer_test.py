@@ -67,7 +67,16 @@ while True:
     print(tk, end="")
 
 print("\n-------\n")
-al.input("""ESC("Teste")""")
+al.input("""ESC("Teste " <> 10 < 1)""")
+
+while True:
+    tk = al.token()
+    if not tk:
+        break
+    print(tk, end="")
+
+print("\n-------\n")
+al.input("""ano=2023, _mes!="maio";""")
 
 while True:
     tk = al.token()
