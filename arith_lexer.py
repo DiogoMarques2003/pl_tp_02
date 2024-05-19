@@ -78,8 +78,8 @@ class ArithLexer:
 
     # Reconhecedor de uma string
     def t_STRING(self, t):
-        # Usamos o ? para evitar o * selecionar mais coisas do que o que deve
-        r'".*?"'
+        # Proteção para não parar nos \"
+        r'"(\\.|[^"\\])*"'
         t.value = t.value[1:-1]  # Remove aspas
         return t
 

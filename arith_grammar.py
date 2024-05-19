@@ -1,4 +1,3 @@
-# arith_grammar.py
 from arith_lexer import ArithLexer
 import ply.yacc as pyacc
 
@@ -36,9 +35,9 @@ class ArithGrammar:
         """lista_declaracoes : declaracao
                              | lista_declaracoes declaracao"""
         if len(p) == 2:
-            p[0] = [p[1]]  # uma única declaração
+            p[0] = {'op': 'seq', 'args': [p[1]]}  # uma única declaração
         else:
-            p[1].append(p[3])  # Adiciona a declaração à lista existente
+            p[1]['args'].append(p[2])  # Adiciona a declaração à lista existente
             p[0] = p[1]
 
     # Declarações gerais dentro do programa
@@ -53,8 +52,51 @@ class ArithGrammar:
 
     # Declaração com atribuição
     def p_declaracao_atribuicao(self, p):
-        """declaracao_atribuicao : VAR_ID '=' expressao ';'"""
+        """declaracao_atribuicao : VAR_ID '=' lista_expressoes ';'"""
         p[0] = {'op': 'atribuicao', 'args': [p[1], p[3]]}
+
+        # Redefinindo a regra para múltiplas atribuições na mesma linha
+
+    # Multi declaração com/sem atribuição
+    def p_declaracao_atribuicao_multipla(self, p):
+        """declaracao_atribuicao : atribuicao
+                                 | declaracao_atribuicao ',' atribuicao ';'"""
+        if len(p) == 2:
+            # Inicializa com uma única atribuição
+            p[0] = {'op': 'seq', 'args': [p[1]]}
+        else:
+            # Mais de uma atribuição, agrupe-as em uma sequência
+            if p[1].get('op') == 'seq':
+                p[1]['args'].append(p[3])  # Adiciona a nova atribuição à sequência existente
+            else:
+                p[0] = {'op': 'seq', 'args': [p[1], p[3]]}  # Cria uma nova sequência
+            p[0] = p[1]
+
+    # atribuir o valor a var
+    def p_atribuicao(self, p):
+        """atribuicao : VAR_ID '=' expressao"""
+        p[0] = {'op': 'atribuicao', 'args': [p[1], p[3]]}
+
+    def p_lista_variaveis(self, p):
+        """lista_variaveis : lista_variaveis ',' VAR_ID
+                           | VAR_ID"""
+        if len(p) == 2:
+            p[0] = {'op': 'seq', 'args': [p[1]]}  # Inicia uma nova lista com o primeiro parâmetro
+        else:
+            p[1]['args'].append(p[3])  # Adiciona à lista existente
+            p[0] = p[1]
+
+    def p_lista_expressoes(self, p):
+        """lista_expressoes : lista_expressoes ',' expressao
+                            | expressao"""
+        if len(p) == 2:
+            p[0] = p[1]  # para uma única expressão, não envolva com 'seq'
+        else:
+            if 'args' in p[1]:
+                p[1]['args'].append(p[3])
+            else:
+                p[1] = {'op': 'seq', 'args': [p[1], p[3]]}
+            p[0] = p[1]
 
     # Declarações que são apenas expressões
     def p_declaracao_expressao(self, p):
@@ -79,12 +121,21 @@ class ArithGrammar:
         """expressao : '-' expressao %prec UMINUS"""
         p[0] = {'op': 'uminus', 'args': [p[2]]}
 
-    # Números, variáveis e strings como literais
-    def p_expressao_num_id(self, p):
+    # Números e strings
+    def p_expressao_num_string(self, p):
         """expressao : NUM
-                     | VAR_ID
                      | STRING"""
-        p[0] = {'op': 'literal', 'args': p[1]}
+        p[0] = {'op': 'literal', 'args': [p[1]]}
+
+    # Variável
+    def p_expressao_var_id(self, p):
+        """expressao : VAR_ID"""
+        p[0] = {'var': p[1]}
+
+    #Chamar funções
+    def p_expressao_chamada_funcao(self, p):
+        """expressao : VAR_ID '(' lista_expressoes ')'"""
+        p[0] = {'op': 'call_func', 'args': [p[1], p[3]]}
 
     # Declaração de funções
     def p_declaracao_funcao(self, p):
@@ -145,17 +196,13 @@ class ArithGrammar:
 
     # Bloco de funções que pode ser uma lista de declarações ou uma expressão simples
     def p_bloco_funcao(self, p):
-        """bloco_funcao : lista_declaracoes
-                        | expressao ';'"""
-        if len(p) == 2:
-            p[0] = [p[1]]  # Trata a expressão como uma declaração única
-        else:
-            p[0] = p[1]
+        """bloco_funcao : lista_declaracoes"""
+        p[0] = p[1]
 
     # Tratar os erros que pode dar a resolver a gramatica do código
     def p_error(self, p):
         if p:
-            print(f"Syntax error: unexpected '{p.type}'")
+            print(f"Syntax error at token '{p.type}' with value '{p.value}' at line '{p.lineno}'")
         else:
             print("Syntax error: unexpected end of file")
         exit(1)
