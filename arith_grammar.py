@@ -1,3 +1,5 @@
+import re
+
 from arith_lexer import ArithLexer
 import ply.yacc as pyacc
 
@@ -92,11 +94,10 @@ class ArithGrammar:
         if len(p) == 2:
             p[0] = p[1]  # para uma única expressão, não envolva com 'seq'
         else:
-            if 'args' in p[1]:
-                p[1]['args'].append(p[3])
-            else:
-                p[1] = {'op': 'seq', 'args': [p[1], p[3]]}
-            p[0] = p[1]
+            if not isinstance(p[1], list):
+                p[1] = [p[1]]  # Se o primeiro item ainda não é uma lista, converta
+            p[1].append(p[3])  # Adicione a expressão subsequente à lista
+            p[0] = p[1]  # A lista é retornada diretamente
 
     # Declarações que são apenas expressões
     def p_declaracao_expressao(self, p):
@@ -121,21 +122,73 @@ class ArithGrammar:
         """expressao : '-' expressao %prec UMINUS"""
         p[0] = {'op': 'uminus', 'args': [p[2]]}
 
-    # Números e strings
-    def p_expressao_num_string(self, p):
-        """expressao : NUM
-                     | STRING"""
+    # Números
+    def p_expressao_num(self, p):
+        """expressao : NUM"""
         p[0] = {'op': 'literal', 'args': [p[1]]}
+
+    # Strings
+    def p_expressao_string(self, p):
+        """expressao : STRING"""
+        # Processar a string para obter partes interpoladas caso exista
+        parts = self.process_interpolated_string(p[1])
+        if len(parts) == 1:
+            # se ouver apenas uma parte é porque é literal ou var
+            if parts[0]['type'] == 'literal':
+                p[0] = {'op': 'literal', 'args': [parts[0]['value']]}
+            else:
+                p[0] = {'var': parts[0]['value']}
+        else:
+            # construir a concatnação para a string com vares
+            p[0] = {'op': 'concat', 'args': []}
+            for part in parts:
+                if part['type'] == 'literal':
+                    p[0]['args'].append({'op': 'literal', 'args': [part['value']]})
+                elif part['type'] == 'interpolacao':
+                    # Adicionar a variável como uma expressão separada
+                    p[0]['args'].append({'var': part['value']})
 
     # Variável
     def p_expressao_var_id(self, p):
         """expressao : VAR_ID"""
         p[0] = {'var': p[1]}
 
+    # Variável
+    def p_expressao_array(self, p):
+        """expressao : '[' lista_elementos  ']' """
+        p[0] = {'array': p[2]}
+
+    # Regra para lidar com a lista de elementos dentro dos colchetes
+    def p_lista_elementos(self, p):
+        """lista_elementos : lista_elementos ',' expressao
+                           | expressao
+                           | vazio"""
+        if len(p) == 2:
+            if p[1] is None:
+                p[0] = []  # Lista vazia
+            else:
+                p[0] = [p[1]]  # Lista com um único elemento
+        else:
+            p[1].append(p[3])
+            p[0] = p[1]  # Lista com múltiplos elementos
+
+    # Função map
+    def p_expressao_map(self, p):
+        """expressao : MAP '(' VAR_ID ',' lista_expressoes ')'"""
+        p[0] = {'op': 'map', 'args': [p[3], p[5]]}
+
+    # Função fold
+    def p_expressao_fold(self, p):
+        """expressao : FOLD '(' VAR_ID ',' lista_expressoes ',' expressao ')'"""
+        p[0] = {'op': 'fold', 'args': [p[3], p[5], p[7]]}
+
     #Chamar funções
     def p_expressao_chamada_funcao(self, p):
         """expressao : VAR_ID '(' lista_expressoes ')'"""
-        p[0] = {'op': 'call_func', 'args': [p[1], p[3]]}
+        if p[1] in ['map', 'fold']:  # se for a função map e fold a operação são eles mesmos
+            p[0] = {'op': p[1], 'args': p[3]}
+        else:
+            p[0] = {'op': 'call_func', 'args': [p[1], p[3]]}
 
     # Declaração de funções
     def p_declaracao_funcao(self, p):
@@ -156,7 +209,9 @@ class ArithGrammar:
     # Lista de parâmetros para funções
     def p_lista_parametros(self, p):
         """lista_parametros : lista_parametros ',' VAR_ID
-                            | VAR_ID"""
+                            | lista_parametros ',' NUM
+                            | VAR_ID
+                            | NUM"""
         if len(p) == 2:
             p[0] = [p[1]]  # Inicia uma nova lista com o primeiro parâmetro
         else:
@@ -206,3 +261,18 @@ class ArithGrammar:
         else:
             print("Syntax error: unexpected end of file")
         exit(1)
+
+    # Função para reconhecer interpolação das strings com variaveis
+    def process_interpolated_string(self, text):
+        parts = []
+        # separar o texto pelas interpolações
+        tokens = re.split(r'(\#\{[^}]+\})', text)
+        for token in tokens:
+            if token.startswith('#{') and token.endswith('}'):
+                # remover o "#{" e "}" da interpolação
+                expression = token[2:-1]
+                parts.append({'type': 'interpolacao', 'value': expression})
+            else:
+                # é uma string
+                parts.append({'type': 'literal', 'value': token})
+        return parts

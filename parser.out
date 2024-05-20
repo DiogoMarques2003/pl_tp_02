@@ -3,8 +3,6 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 Unused terminals:
 
     ENTRADA
-    FOLD
-    MAP
     NEG
 
 Grammar
@@ -36,54 +34,64 @@ Rule 23    expressao -> - expressao
 Rule 24    expressao -> NUM
 Rule 25    expressao -> STRING
 Rule 26    expressao -> VAR_ID
-Rule 27    expressao -> VAR_ID ( lista_expressoes )
-Rule 28    declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM
-Rule 29    declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ;
-Rule 30    lista_parametros_opcional -> lista_parametros
-Rule 31    lista_parametros_opcional -> vazio
-Rule 32    lista_parametros -> lista_parametros , VAR_ID
-Rule 33    lista_parametros -> VAR_ID
-Rule 34    declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM
-Rule 35    senao_opcional -> SENAO : lista_declaracoes
-Rule 36    senao_opcional -> vazio
-Rule 37    declaracao_escrever -> ESCREVER ( expressao ) ;
-Rule 38    declaracao_comentario -> COMENTARIO
-Rule 39    vazio -> <empty>
-Rule 40    expressao -> expressao CONCAT expressao
-Rule 41    bloco_funcao -> lista_declaracoes
+Rule 27    expressao -> [ lista_elementos ]
+Rule 28    lista_elementos -> lista_elementos , expressao
+Rule 29    lista_elementos -> expressao
+Rule 30    lista_elementos -> vazio
+Rule 31    expressao -> MAP ( VAR_ID , lista_expressoes )
+Rule 32    expressao -> FOLD ( VAR_ID , lista_expressoes , expressao )
+Rule 33    expressao -> VAR_ID ( lista_expressoes )
+Rule 34    declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM
+Rule 35    declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ;
+Rule 36    lista_parametros_opcional -> lista_parametros
+Rule 37    lista_parametros_opcional -> vazio
+Rule 38    lista_parametros -> lista_parametros , VAR_ID
+Rule 39    lista_parametros -> lista_parametros , NUM
+Rule 40    lista_parametros -> VAR_ID
+Rule 41    lista_parametros -> NUM
+Rule 42    declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM
+Rule 43    senao_opcional -> SENAO : lista_declaracoes
+Rule 44    senao_opcional -> vazio
+Rule 45    declaracao_escrever -> ESCREVER ( expressao ) ;
+Rule 46    declaracao_comentario -> COMENTARIO
+Rule 47    vazio -> <empty>
+Rule 48    expressao -> expressao CONCAT expressao
+Rule 49    bloco_funcao -> lista_declaracoes
 
 Terminals, with rules where they appear
 
-(                    : 22 27 28 29 37
-)                    : 22 27 28 29 37
+(                    : 22 31 32 33 34 35 45
+)                    : 22 31 32 33 34 35 45
 *                    : 20
 +                    : 18
-,                    : 11 13 15 29 32
+,                    : 11 13 15 28 31 32 32 35 38 39
 -                    : 19 23
 /                    : 21
-:                    : 28 29 34 35
-;                    : 9 11 17 29 37
+:                    : 34 35 42 43
+;                    : 9 11 17 35 45
 =                    : 9 12
-COMENTARIO           : 38
-CONCAT               : 40
+COMENTARIO           : 46
+CONCAT               : 48
 ENTRADA              : 
-ESCREVER             : 37
-FIM                  : 28 34
-FOLD                 : 
-FUNCAO               : 28 29
-MAP                  : 
+ESCREVER             : 45
+FIM                  : 34 42
+FOLD                 : 32
+FUNCAO               : 34 35
+MAP                  : 31
 NEG                  : 
-NUM                  : 24
-SE                   : 34
-SENAO                : 35
+NUM                  : 24 39 41
+SE                   : 42
+SENAO                : 43
 STRING               : 25
-VAR_ID               : 9 12 13 14 26 27 28 29 32 33
+VAR_ID               : 9 12 13 14 26 31 32 33 34 35 38 40
+[                    : 27
+]                    : 27
 error                : 
 
 Nonterminals, with rules where they appear
 
 atribuicao           : 10 11
-bloco_funcao         : 28
+bloco_funcao         : 34
 declaracao           : 1 2
 declaracao_atribuicao : 3 11
 declaracao_comentario : 8
@@ -91,14 +99,15 @@ declaracao_escrever  : 7
 declaracao_expressao : 4
 declaracao_funcao    : 5
 declaracao_se        : 6
-expressao            : 12 15 16 17 18 18 19 19 20 20 21 21 22 23 29 34 37 40 40
-lista_declaracoes    : 2 34 35 41 0
-lista_expressoes     : 9 15 27
-lista_parametros     : 30 32
-lista_parametros_opcional : 28 29
+expressao            : 12 15 16 17 18 18 19 19 20 20 21 21 22 23 28 29 32 35 42 45 48 48
+lista_declaracoes    : 2 42 43 49 0
+lista_elementos      : 27 28
+lista_expressoes     : 9 15 31 32 33
+lista_parametros     : 36 38 39
+lista_parametros_opcional : 34 35
 lista_variaveis      : 13
-senao_opcional       : 34
-vazio                : 31 36
+senao_opcional       : 42
+vazio                : 30 37 44
 
 Parsing method: LALR
 
@@ -117,11 +126,11 @@ state 0
     (10) declaracao_atribuicao -> . atribuicao
     (11) declaracao_atribuicao -> . declaracao_atribuicao , atribuicao ;
     (17) declaracao_expressao -> . expressao ;
-    (28) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM
-    (29) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ;
-    (34) declaracao_se -> . SE expressao : lista_declaracoes senao_opcional FIM
-    (37) declaracao_escrever -> . ESCREVER ( expressao ) ;
-    (38) declaracao_comentario -> . COMENTARIO
+    (34) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM
+    (35) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ;
+    (42) declaracao_se -> . SE expressao : lista_declaracoes senao_opcional FIM
+    (45) declaracao_escrever -> . ESCREVER ( expressao ) ;
+    (46) declaracao_comentario -> . COMENTARIO
     (12) atribuicao -> . VAR_ID = expressao
     (18) expressao -> . expressao + expressao
     (19) expressao -> . expressao - expressao
@@ -132,8 +141,11 @@ state 0
     (24) expressao -> . NUM
     (25) expressao -> . STRING
     (26) expressao -> . VAR_ID
-    (27) expressao -> . VAR_ID ( lista_expressoes )
-    (40) expressao -> . expressao CONCAT expressao
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
 
     VAR_ID          shift and go to state 9
     FUNCAO          shift and go to state 12
@@ -144,6 +156,9 @@ state 0
     -               shift and go to state 17
     NUM             shift and go to state 18
     STRING          shift and go to state 19
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
 
     lista_declaracoes              shift and go to state 1
     declaracao                     shift and go to state 2
@@ -170,11 +185,11 @@ state 1
     (10) declaracao_atribuicao -> . atribuicao
     (11) declaracao_atribuicao -> . declaracao_atribuicao , atribuicao ;
     (17) declaracao_expressao -> . expressao ;
-    (28) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM
-    (29) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ;
-    (34) declaracao_se -> . SE expressao : lista_declaracoes senao_opcional FIM
-    (37) declaracao_escrever -> . ESCREVER ( expressao ) ;
-    (38) declaracao_comentario -> . COMENTARIO
+    (34) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM
+    (35) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ;
+    (42) declaracao_se -> . SE expressao : lista_declaracoes senao_opcional FIM
+    (45) declaracao_escrever -> . ESCREVER ( expressao ) ;
+    (46) declaracao_comentario -> . COMENTARIO
     (12) atribuicao -> . VAR_ID = expressao
     (18) expressao -> . expressao + expressao
     (19) expressao -> . expressao - expressao
@@ -185,8 +200,11 @@ state 1
     (24) expressao -> . NUM
     (25) expressao -> . STRING
     (26) expressao -> . VAR_ID
-    (27) expressao -> . VAR_ID ( lista_expressoes )
-    (40) expressao -> . expressao CONCAT expressao
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
 
     VAR_ID          shift and go to state 9
     FUNCAO          shift and go to state 12
@@ -197,8 +215,11 @@ state 1
     -               shift and go to state 17
     NUM             shift and go to state 18
     STRING          shift and go to state 19
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
 
-    declaracao                     shift and go to state 20
+    declaracao                     shift and go to state 23
     declaracao_atribuicao          shift and go to state 3
     declaracao_expressao           shift and go to state 4
     declaracao_funcao              shift and go to state 5
@@ -221,6 +242,9 @@ state 2
     -               reduce using rule 1 (lista_declaracoes -> declaracao .)
     NUM             reduce using rule 1 (lista_declaracoes -> declaracao .)
     STRING          reduce using rule 1 (lista_declaracoes -> declaracao .)
+    [               reduce using rule 1 (lista_declaracoes -> declaracao .)
+    MAP             reduce using rule 1 (lista_declaracoes -> declaracao .)
+    FOLD            reduce using rule 1 (lista_declaracoes -> declaracao .)
     $end            reduce using rule 1 (lista_declaracoes -> declaracao .)
     SENAO           reduce using rule 1 (lista_declaracoes -> declaracao .)
     FIM             reduce using rule 1 (lista_declaracoes -> declaracao .)
@@ -240,10 +264,13 @@ state 3
     -               reduce using rule 3 (declaracao -> declaracao_atribuicao .)
     NUM             reduce using rule 3 (declaracao -> declaracao_atribuicao .)
     STRING          reduce using rule 3 (declaracao -> declaracao_atribuicao .)
+    [               reduce using rule 3 (declaracao -> declaracao_atribuicao .)
+    MAP             reduce using rule 3 (declaracao -> declaracao_atribuicao .)
+    FOLD            reduce using rule 3 (declaracao -> declaracao_atribuicao .)
     $end            reduce using rule 3 (declaracao -> declaracao_atribuicao .)
     SENAO           reduce using rule 3 (declaracao -> declaracao_atribuicao .)
     FIM             reduce using rule 3 (declaracao -> declaracao_atribuicao .)
-    ,               shift and go to state 21
+    ,               shift and go to state 24
 
 
 state 4
@@ -259,6 +286,9 @@ state 4
     -               reduce using rule 4 (declaracao -> declaracao_expressao .)
     NUM             reduce using rule 4 (declaracao -> declaracao_expressao .)
     STRING          reduce using rule 4 (declaracao -> declaracao_expressao .)
+    [               reduce using rule 4 (declaracao -> declaracao_expressao .)
+    MAP             reduce using rule 4 (declaracao -> declaracao_expressao .)
+    FOLD            reduce using rule 4 (declaracao -> declaracao_expressao .)
     $end            reduce using rule 4 (declaracao -> declaracao_expressao .)
     SENAO           reduce using rule 4 (declaracao -> declaracao_expressao .)
     FIM             reduce using rule 4 (declaracao -> declaracao_expressao .)
@@ -277,6 +307,9 @@ state 5
     -               reduce using rule 5 (declaracao -> declaracao_funcao .)
     NUM             reduce using rule 5 (declaracao -> declaracao_funcao .)
     STRING          reduce using rule 5 (declaracao -> declaracao_funcao .)
+    [               reduce using rule 5 (declaracao -> declaracao_funcao .)
+    MAP             reduce using rule 5 (declaracao -> declaracao_funcao .)
+    FOLD            reduce using rule 5 (declaracao -> declaracao_funcao .)
     $end            reduce using rule 5 (declaracao -> declaracao_funcao .)
     SENAO           reduce using rule 5 (declaracao -> declaracao_funcao .)
     FIM             reduce using rule 5 (declaracao -> declaracao_funcao .)
@@ -295,6 +328,9 @@ state 6
     -               reduce using rule 6 (declaracao -> declaracao_se .)
     NUM             reduce using rule 6 (declaracao -> declaracao_se .)
     STRING          reduce using rule 6 (declaracao -> declaracao_se .)
+    [               reduce using rule 6 (declaracao -> declaracao_se .)
+    MAP             reduce using rule 6 (declaracao -> declaracao_se .)
+    FOLD            reduce using rule 6 (declaracao -> declaracao_se .)
     $end            reduce using rule 6 (declaracao -> declaracao_se .)
     SENAO           reduce using rule 6 (declaracao -> declaracao_se .)
     FIM             reduce using rule 6 (declaracao -> declaracao_se .)
@@ -313,6 +349,9 @@ state 7
     -               reduce using rule 7 (declaracao -> declaracao_escrever .)
     NUM             reduce using rule 7 (declaracao -> declaracao_escrever .)
     STRING          reduce using rule 7 (declaracao -> declaracao_escrever .)
+    [               reduce using rule 7 (declaracao -> declaracao_escrever .)
+    MAP             reduce using rule 7 (declaracao -> declaracao_escrever .)
+    FOLD            reduce using rule 7 (declaracao -> declaracao_escrever .)
     $end            reduce using rule 7 (declaracao -> declaracao_escrever .)
     SENAO           reduce using rule 7 (declaracao -> declaracao_escrever .)
     FIM             reduce using rule 7 (declaracao -> declaracao_escrever .)
@@ -331,6 +370,9 @@ state 8
     -               reduce using rule 8 (declaracao -> declaracao_comentario .)
     NUM             reduce using rule 8 (declaracao -> declaracao_comentario .)
     STRING          reduce using rule 8 (declaracao -> declaracao_comentario .)
+    [               reduce using rule 8 (declaracao -> declaracao_comentario .)
+    MAP             reduce using rule 8 (declaracao -> declaracao_comentario .)
+    FOLD            reduce using rule 8 (declaracao -> declaracao_comentario .)
     $end            reduce using rule 8 (declaracao -> declaracao_comentario .)
     SENAO           reduce using rule 8 (declaracao -> declaracao_comentario .)
     FIM             reduce using rule 8 (declaracao -> declaracao_comentario .)
@@ -341,16 +383,16 @@ state 9
     (9) declaracao_atribuicao -> VAR_ID . = lista_expressoes ;
     (12) atribuicao -> VAR_ID . = expressao
     (26) expressao -> VAR_ID .
-    (27) expressao -> VAR_ID . ( lista_expressoes )
+    (33) expressao -> VAR_ID . ( lista_expressoes )
 
-    =               shift and go to state 22
+    =               shift and go to state 25
     ;               reduce using rule 26 (expressao -> VAR_ID .)
     +               reduce using rule 26 (expressao -> VAR_ID .)
     -               reduce using rule 26 (expressao -> VAR_ID .)
     *               reduce using rule 26 (expressao -> VAR_ID .)
     /               reduce using rule 26 (expressao -> VAR_ID .)
     CONCAT          reduce using rule 26 (expressao -> VAR_ID .)
-    (               shift and go to state 23
+    (               shift and go to state 26
 
 
 state 10
@@ -367,6 +409,9 @@ state 10
     -               reduce using rule 10 (declaracao_atribuicao -> atribuicao .)
     NUM             reduce using rule 10 (declaracao_atribuicao -> atribuicao .)
     STRING          reduce using rule 10 (declaracao_atribuicao -> atribuicao .)
+    [               reduce using rule 10 (declaracao_atribuicao -> atribuicao .)
+    MAP             reduce using rule 10 (declaracao_atribuicao -> atribuicao .)
+    FOLD            reduce using rule 10 (declaracao_atribuicao -> atribuicao .)
     $end            reduce using rule 10 (declaracao_atribuicao -> atribuicao .)
     SENAO           reduce using rule 10 (declaracao_atribuicao -> atribuicao .)
     FIM             reduce using rule 10 (declaracao_atribuicao -> atribuicao .)
@@ -379,22 +424,22 @@ state 11
     (19) expressao -> expressao . - expressao
     (20) expressao -> expressao . * expressao
     (21) expressao -> expressao . / expressao
-    (40) expressao -> expressao . CONCAT expressao
+    (48) expressao -> expressao . CONCAT expressao
 
-    ;               shift and go to state 24
-    +               shift and go to state 25
-    -               shift and go to state 26
-    *               shift and go to state 27
-    /               shift and go to state 28
-    CONCAT          shift and go to state 29
+    ;               shift and go to state 27
+    +               shift and go to state 28
+    -               shift and go to state 29
+    *               shift and go to state 30
+    /               shift and go to state 31
+    CONCAT          shift and go to state 32
 
 
 state 12
 
-    (28) declaracao_funcao -> FUNCAO . VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM
-    (29) declaracao_funcao -> FUNCAO . VAR_ID ( lista_parametros_opcional ) , : expressao ;
+    (34) declaracao_funcao -> FUNCAO . VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM
+    (35) declaracao_funcao -> FUNCAO . VAR_ID ( lista_parametros_opcional ) , : expressao ;
 
-    VAR_ID          shift and go to state 30
+    VAR_ID          shift and go to state 33
 
 
 state 13
@@ -409,20 +454,26 @@ state 13
     (24) expressao -> . NUM
     (25) expressao -> . STRING
     (26) expressao -> . VAR_ID
-    (27) expressao -> . VAR_ID ( lista_expressoes )
-    (40) expressao -> . expressao CONCAT expressao
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
 
     (               shift and go to state 13
     -               shift and go to state 17
     NUM             shift and go to state 18
     STRING          shift and go to state 19
-    VAR_ID          shift and go to state 32
+    VAR_ID          shift and go to state 35
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
 
-    expressao                      shift and go to state 31
+    expressao                      shift and go to state 34
 
 state 14
 
-    (34) declaracao_se -> SE . expressao : lista_declaracoes senao_opcional FIM
+    (42) declaracao_se -> SE . expressao : lista_declaracoes senao_opcional FIM
     (18) expressao -> . expressao + expressao
     (19) expressao -> . expressao - expressao
     (20) expressao -> . expressao * expressao
@@ -432,40 +483,49 @@ state 14
     (24) expressao -> . NUM
     (25) expressao -> . STRING
     (26) expressao -> . VAR_ID
-    (27) expressao -> . VAR_ID ( lista_expressoes )
-    (40) expressao -> . expressao CONCAT expressao
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
 
     (               shift and go to state 13
     -               shift and go to state 17
     NUM             shift and go to state 18
     STRING          shift and go to state 19
-    VAR_ID          shift and go to state 32
+    VAR_ID          shift and go to state 35
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
 
-    expressao                      shift and go to state 33
+    expressao                      shift and go to state 36
 
 state 15
 
-    (37) declaracao_escrever -> ESCREVER . ( expressao ) ;
+    (45) declaracao_escrever -> ESCREVER . ( expressao ) ;
 
-    (               shift and go to state 34
+    (               shift and go to state 37
 
 
 state 16
 
-    (38) declaracao_comentario -> COMENTARIO .
+    (46) declaracao_comentario -> COMENTARIO .
 
-    VAR_ID          reduce using rule 38 (declaracao_comentario -> COMENTARIO .)
-    FUNCAO          reduce using rule 38 (declaracao_comentario -> COMENTARIO .)
-    SE              reduce using rule 38 (declaracao_comentario -> COMENTARIO .)
-    ESCREVER        reduce using rule 38 (declaracao_comentario -> COMENTARIO .)
-    COMENTARIO      reduce using rule 38 (declaracao_comentario -> COMENTARIO .)
-    (               reduce using rule 38 (declaracao_comentario -> COMENTARIO .)
-    -               reduce using rule 38 (declaracao_comentario -> COMENTARIO .)
-    NUM             reduce using rule 38 (declaracao_comentario -> COMENTARIO .)
-    STRING          reduce using rule 38 (declaracao_comentario -> COMENTARIO .)
-    $end            reduce using rule 38 (declaracao_comentario -> COMENTARIO .)
-    SENAO           reduce using rule 38 (declaracao_comentario -> COMENTARIO .)
-    FIM             reduce using rule 38 (declaracao_comentario -> COMENTARIO .)
+    VAR_ID          reduce using rule 46 (declaracao_comentario -> COMENTARIO .)
+    FUNCAO          reduce using rule 46 (declaracao_comentario -> COMENTARIO .)
+    SE              reduce using rule 46 (declaracao_comentario -> COMENTARIO .)
+    ESCREVER        reduce using rule 46 (declaracao_comentario -> COMENTARIO .)
+    COMENTARIO      reduce using rule 46 (declaracao_comentario -> COMENTARIO .)
+    (               reduce using rule 46 (declaracao_comentario -> COMENTARIO .)
+    -               reduce using rule 46 (declaracao_comentario -> COMENTARIO .)
+    NUM             reduce using rule 46 (declaracao_comentario -> COMENTARIO .)
+    STRING          reduce using rule 46 (declaracao_comentario -> COMENTARIO .)
+    [               reduce using rule 46 (declaracao_comentario -> COMENTARIO .)
+    MAP             reduce using rule 46 (declaracao_comentario -> COMENTARIO .)
+    FOLD            reduce using rule 46 (declaracao_comentario -> COMENTARIO .)
+    $end            reduce using rule 46 (declaracao_comentario -> COMENTARIO .)
+    SENAO           reduce using rule 46 (declaracao_comentario -> COMENTARIO .)
+    FIM             reduce using rule 46 (declaracao_comentario -> COMENTARIO .)
 
 
 state 17
@@ -480,16 +540,22 @@ state 17
     (24) expressao -> . NUM
     (25) expressao -> . STRING
     (26) expressao -> . VAR_ID
-    (27) expressao -> . VAR_ID ( lista_expressoes )
-    (40) expressao -> . expressao CONCAT expressao
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
 
     (               shift and go to state 13
     -               shift and go to state 17
     NUM             shift and go to state 18
     STRING          shift and go to state 19
-    VAR_ID          shift and go to state 32
+    VAR_ID          shift and go to state 35
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
 
-    expressao                      shift and go to state 35
+    expressao                      shift and go to state 38
 
 state 18
 
@@ -503,6 +569,7 @@ state 18
     CONCAT          reduce using rule 24 (expressao -> NUM .)
     )               reduce using rule 24 (expressao -> NUM .)
     :               reduce using rule 24 (expressao -> NUM .)
+    ]               reduce using rule 24 (expressao -> NUM .)
     ,               reduce using rule 24 (expressao -> NUM .)
     VAR_ID          reduce using rule 24 (expressao -> NUM .)
     FUNCAO          reduce using rule 24 (expressao -> NUM .)
@@ -512,6 +579,9 @@ state 18
     (               reduce using rule 24 (expressao -> NUM .)
     NUM             reduce using rule 24 (expressao -> NUM .)
     STRING          reduce using rule 24 (expressao -> NUM .)
+    [               reduce using rule 24 (expressao -> NUM .)
+    MAP             reduce using rule 24 (expressao -> NUM .)
+    FOLD            reduce using rule 24 (expressao -> NUM .)
     $end            reduce using rule 24 (expressao -> NUM .)
     SENAO           reduce using rule 24 (expressao -> NUM .)
     FIM             reduce using rule 24 (expressao -> NUM .)
@@ -529,6 +599,7 @@ state 19
     CONCAT          reduce using rule 25 (expressao -> STRING .)
     )               reduce using rule 25 (expressao -> STRING .)
     :               reduce using rule 25 (expressao -> STRING .)
+    ]               reduce using rule 25 (expressao -> STRING .)
     ,               reduce using rule 25 (expressao -> STRING .)
     VAR_ID          reduce using rule 25 (expressao -> STRING .)
     FUNCAO          reduce using rule 25 (expressao -> STRING .)
@@ -538,12 +609,66 @@ state 19
     (               reduce using rule 25 (expressao -> STRING .)
     NUM             reduce using rule 25 (expressao -> STRING .)
     STRING          reduce using rule 25 (expressao -> STRING .)
+    [               reduce using rule 25 (expressao -> STRING .)
+    MAP             reduce using rule 25 (expressao -> STRING .)
+    FOLD            reduce using rule 25 (expressao -> STRING .)
     $end            reduce using rule 25 (expressao -> STRING .)
     SENAO           reduce using rule 25 (expressao -> STRING .)
     FIM             reduce using rule 25 (expressao -> STRING .)
 
 
 state 20
+
+    (27) expressao -> [ . lista_elementos ]
+    (28) lista_elementos -> . lista_elementos , expressao
+    (29) lista_elementos -> . expressao
+    (30) lista_elementos -> . vazio
+    (18) expressao -> . expressao + expressao
+    (19) expressao -> . expressao - expressao
+    (20) expressao -> . expressao * expressao
+    (21) expressao -> . expressao / expressao
+    (22) expressao -> . ( expressao )
+    (23) expressao -> . - expressao
+    (24) expressao -> . NUM
+    (25) expressao -> . STRING
+    (26) expressao -> . VAR_ID
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
+    (47) vazio -> .
+
+    (               shift and go to state 13
+    -               shift and go to state 17
+    NUM             shift and go to state 18
+    STRING          shift and go to state 19
+    VAR_ID          shift and go to state 35
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
+    ]               reduce using rule 47 (vazio -> .)
+    ,               reduce using rule 47 (vazio -> .)
+
+    lista_elementos                shift and go to state 39
+    expressao                      shift and go to state 40
+    vazio                          shift and go to state 41
+
+state 21
+
+    (31) expressao -> MAP . ( VAR_ID , lista_expressoes )
+
+    (               shift and go to state 42
+
+
+state 22
+
+    (32) expressao -> FOLD . ( VAR_ID , lista_expressoes , expressao )
+
+    (               shift and go to state 43
+
+
+state 23
 
     (2) lista_declaracoes -> lista_declaracoes declaracao .
 
@@ -556,21 +681,24 @@ state 20
     -               reduce using rule 2 (lista_declaracoes -> lista_declaracoes declaracao .)
     NUM             reduce using rule 2 (lista_declaracoes -> lista_declaracoes declaracao .)
     STRING          reduce using rule 2 (lista_declaracoes -> lista_declaracoes declaracao .)
+    [               reduce using rule 2 (lista_declaracoes -> lista_declaracoes declaracao .)
+    MAP             reduce using rule 2 (lista_declaracoes -> lista_declaracoes declaracao .)
+    FOLD            reduce using rule 2 (lista_declaracoes -> lista_declaracoes declaracao .)
     $end            reduce using rule 2 (lista_declaracoes -> lista_declaracoes declaracao .)
     SENAO           reduce using rule 2 (lista_declaracoes -> lista_declaracoes declaracao .)
     FIM             reduce using rule 2 (lista_declaracoes -> lista_declaracoes declaracao .)
 
 
-state 21
+state 24
 
     (11) declaracao_atribuicao -> declaracao_atribuicao , . atribuicao ;
     (12) atribuicao -> . VAR_ID = expressao
 
-    VAR_ID          shift and go to state 37
+    VAR_ID          shift and go to state 45
 
-    atribuicao                     shift and go to state 36
+    atribuicao                     shift and go to state 44
 
-state 22
+state 25
 
     (9) declaracao_atribuicao -> VAR_ID = . lista_expressoes ;
     (12) atribuicao -> VAR_ID = . expressao
@@ -585,21 +713,27 @@ state 22
     (24) expressao -> . NUM
     (25) expressao -> . STRING
     (26) expressao -> . VAR_ID
-    (27) expressao -> . VAR_ID ( lista_expressoes )
-    (40) expressao -> . expressao CONCAT expressao
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
 
     (               shift and go to state 13
     -               shift and go to state 17
     NUM             shift and go to state 18
     STRING          shift and go to state 19
-    VAR_ID          shift and go to state 32
+    VAR_ID          shift and go to state 35
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
 
-    lista_expressoes               shift and go to state 38
-    expressao                      shift and go to state 39
+    lista_expressoes               shift and go to state 46
+    expressao                      shift and go to state 47
 
-state 23
+state 26
 
-    (27) expressao -> VAR_ID ( . lista_expressoes )
+    (33) expressao -> VAR_ID ( . lista_expressoes )
     (15) lista_expressoes -> . lista_expressoes , expressao
     (16) lista_expressoes -> . expressao
     (18) expressao -> . expressao + expressao
@@ -611,19 +745,25 @@ state 23
     (24) expressao -> . NUM
     (25) expressao -> . STRING
     (26) expressao -> . VAR_ID
-    (27) expressao -> . VAR_ID ( lista_expressoes )
-    (40) expressao -> . expressao CONCAT expressao
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
 
     (               shift and go to state 13
     -               shift and go to state 17
     NUM             shift and go to state 18
     STRING          shift and go to state 19
-    VAR_ID          shift and go to state 32
+    VAR_ID          shift and go to state 35
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
 
-    lista_expressoes               shift and go to state 40
-    expressao                      shift and go to state 41
+    lista_expressoes               shift and go to state 48
+    expressao                      shift and go to state 49
 
-state 24
+state 27
 
     (17) declaracao_expressao -> expressao ; .
 
@@ -636,12 +776,15 @@ state 24
     -               reduce using rule 17 (declaracao_expressao -> expressao ; .)
     NUM             reduce using rule 17 (declaracao_expressao -> expressao ; .)
     STRING          reduce using rule 17 (declaracao_expressao -> expressao ; .)
+    [               reduce using rule 17 (declaracao_expressao -> expressao ; .)
+    MAP             reduce using rule 17 (declaracao_expressao -> expressao ; .)
+    FOLD            reduce using rule 17 (declaracao_expressao -> expressao ; .)
     $end            reduce using rule 17 (declaracao_expressao -> expressao ; .)
     SENAO           reduce using rule 17 (declaracao_expressao -> expressao ; .)
     FIM             reduce using rule 17 (declaracao_expressao -> expressao ; .)
 
 
-state 25
+state 28
 
     (18) expressao -> expressao + . expressao
     (18) expressao -> . expressao + expressao
@@ -653,18 +796,24 @@ state 25
     (24) expressao -> . NUM
     (25) expressao -> . STRING
     (26) expressao -> . VAR_ID
-    (27) expressao -> . VAR_ID ( lista_expressoes )
-    (40) expressao -> . expressao CONCAT expressao
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
 
     (               shift and go to state 13
     -               shift and go to state 17
     NUM             shift and go to state 18
     STRING          shift and go to state 19
-    VAR_ID          shift and go to state 32
+    VAR_ID          shift and go to state 35
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
 
-    expressao                      shift and go to state 42
+    expressao                      shift and go to state 50
 
-state 26
+state 29
 
     (19) expressao -> expressao - . expressao
     (18) expressao -> . expressao + expressao
@@ -676,18 +825,24 @@ state 26
     (24) expressao -> . NUM
     (25) expressao -> . STRING
     (26) expressao -> . VAR_ID
-    (27) expressao -> . VAR_ID ( lista_expressoes )
-    (40) expressao -> . expressao CONCAT expressao
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
 
     (               shift and go to state 13
     -               shift and go to state 17
     NUM             shift and go to state 18
     STRING          shift and go to state 19
-    VAR_ID          shift and go to state 32
+    VAR_ID          shift and go to state 35
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
 
-    expressao                      shift and go to state 43
+    expressao                      shift and go to state 51
 
-state 27
+state 30
 
     (20) expressao -> expressao * . expressao
     (18) expressao -> . expressao + expressao
@@ -699,18 +854,24 @@ state 27
     (24) expressao -> . NUM
     (25) expressao -> . STRING
     (26) expressao -> . VAR_ID
-    (27) expressao -> . VAR_ID ( lista_expressoes )
-    (40) expressao -> . expressao CONCAT expressao
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
 
     (               shift and go to state 13
     -               shift and go to state 17
     NUM             shift and go to state 18
     STRING          shift and go to state 19
-    VAR_ID          shift and go to state 32
+    VAR_ID          shift and go to state 35
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
 
-    expressao                      shift and go to state 44
+    expressao                      shift and go to state 52
 
-state 28
+state 31
 
     (21) expressao -> expressao / . expressao
     (18) expressao -> . expressao + expressao
@@ -722,20 +883,26 @@ state 28
     (24) expressao -> . NUM
     (25) expressao -> . STRING
     (26) expressao -> . VAR_ID
-    (27) expressao -> . VAR_ID ( lista_expressoes )
-    (40) expressao -> . expressao CONCAT expressao
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
 
     (               shift and go to state 13
     -               shift and go to state 17
     NUM             shift and go to state 18
     STRING          shift and go to state 19
-    VAR_ID          shift and go to state 32
+    VAR_ID          shift and go to state 35
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
 
-    expressao                      shift and go to state 45
+    expressao                      shift and go to state 53
 
-state 29
+state 32
 
-    (40) expressao -> expressao CONCAT . expressao
+    (48) expressao -> expressao CONCAT . expressao
     (18) expressao -> . expressao + expressao
     (19) expressao -> . expressao - expressao
     (20) expressao -> . expressao * expressao
@@ -745,46 +912,52 @@ state 29
     (24) expressao -> . NUM
     (25) expressao -> . STRING
     (26) expressao -> . VAR_ID
-    (27) expressao -> . VAR_ID ( lista_expressoes )
-    (40) expressao -> . expressao CONCAT expressao
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
 
     (               shift and go to state 13
     -               shift and go to state 17
     NUM             shift and go to state 18
     STRING          shift and go to state 19
-    VAR_ID          shift and go to state 32
+    VAR_ID          shift and go to state 35
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
 
-    expressao                      shift and go to state 46
+    expressao                      shift and go to state 54
 
-state 30
+state 33
 
-    (28) declaracao_funcao -> FUNCAO VAR_ID . ( lista_parametros_opcional ) : bloco_funcao FIM
-    (29) declaracao_funcao -> FUNCAO VAR_ID . ( lista_parametros_opcional ) , : expressao ;
+    (34) declaracao_funcao -> FUNCAO VAR_ID . ( lista_parametros_opcional ) : bloco_funcao FIM
+    (35) declaracao_funcao -> FUNCAO VAR_ID . ( lista_parametros_opcional ) , : expressao ;
 
-    (               shift and go to state 47
+    (               shift and go to state 55
 
 
-state 31
+state 34
 
     (22) expressao -> ( expressao . )
     (18) expressao -> expressao . + expressao
     (19) expressao -> expressao . - expressao
     (20) expressao -> expressao . * expressao
     (21) expressao -> expressao . / expressao
-    (40) expressao -> expressao . CONCAT expressao
+    (48) expressao -> expressao . CONCAT expressao
 
-    )               shift and go to state 48
-    +               shift and go to state 25
-    -               shift and go to state 26
-    *               shift and go to state 27
-    /               shift and go to state 28
-    CONCAT          shift and go to state 29
+    )               shift and go to state 56
+    +               shift and go to state 28
+    -               shift and go to state 29
+    *               shift and go to state 30
+    /               shift and go to state 31
+    CONCAT          shift and go to state 32
 
 
-state 32
+state 35
 
     (26) expressao -> VAR_ID .
-    (27) expressao -> VAR_ID . ( lista_expressoes )
+    (33) expressao -> VAR_ID . ( lista_expressoes )
 
   ! shift/reduce conflict for ( resolved as shift
     )               reduce using rule 26 (expressao -> VAR_ID .)
@@ -795,6 +968,7 @@ state 32
     CONCAT          reduce using rule 26 (expressao -> VAR_ID .)
     :               reduce using rule 26 (expressao -> VAR_ID .)
     ;               reduce using rule 26 (expressao -> VAR_ID .)
+    ]               reduce using rule 26 (expressao -> VAR_ID .)
     ,               reduce using rule 26 (expressao -> VAR_ID .)
     VAR_ID          reduce using rule 26 (expressao -> VAR_ID .)
     FUNCAO          reduce using rule 26 (expressao -> VAR_ID .)
@@ -803,34 +977,37 @@ state 32
     COMENTARIO      reduce using rule 26 (expressao -> VAR_ID .)
     NUM             reduce using rule 26 (expressao -> VAR_ID .)
     STRING          reduce using rule 26 (expressao -> VAR_ID .)
+    [               reduce using rule 26 (expressao -> VAR_ID .)
+    MAP             reduce using rule 26 (expressao -> VAR_ID .)
+    FOLD            reduce using rule 26 (expressao -> VAR_ID .)
     $end            reduce using rule 26 (expressao -> VAR_ID .)
     SENAO           reduce using rule 26 (expressao -> VAR_ID .)
     FIM             reduce using rule 26 (expressao -> VAR_ID .)
-    (               shift and go to state 23
+    (               shift and go to state 26
 
   ! (               [ reduce using rule 26 (expressao -> VAR_ID .) ]
 
 
-state 33
+state 36
 
-    (34) declaracao_se -> SE expressao . : lista_declaracoes senao_opcional FIM
+    (42) declaracao_se -> SE expressao . : lista_declaracoes senao_opcional FIM
     (18) expressao -> expressao . + expressao
     (19) expressao -> expressao . - expressao
     (20) expressao -> expressao . * expressao
     (21) expressao -> expressao . / expressao
-    (40) expressao -> expressao . CONCAT expressao
+    (48) expressao -> expressao . CONCAT expressao
 
-    :               shift and go to state 49
-    +               shift and go to state 25
-    -               shift and go to state 26
-    *               shift and go to state 27
-    /               shift and go to state 28
-    CONCAT          shift and go to state 29
+    :               shift and go to state 57
+    +               shift and go to state 28
+    -               shift and go to state 29
+    *               shift and go to state 30
+    /               shift and go to state 31
+    CONCAT          shift and go to state 32
 
 
-state 34
+state 37
 
-    (37) declaracao_escrever -> ESCREVER ( . expressao ) ;
+    (45) declaracao_escrever -> ESCREVER ( . expressao ) ;
     (18) expressao -> . expressao + expressao
     (19) expressao -> . expressao - expressao
     (20) expressao -> . expressao * expressao
@@ -840,25 +1017,31 @@ state 34
     (24) expressao -> . NUM
     (25) expressao -> . STRING
     (26) expressao -> . VAR_ID
-    (27) expressao -> . VAR_ID ( lista_expressoes )
-    (40) expressao -> . expressao CONCAT expressao
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
 
     (               shift and go to state 13
     -               shift and go to state 17
     NUM             shift and go to state 18
     STRING          shift and go to state 19
-    VAR_ID          shift and go to state 32
+    VAR_ID          shift and go to state 35
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
 
-    expressao                      shift and go to state 50
+    expressao                      shift and go to state 58
 
-state 35
+state 38
 
     (23) expressao -> - expressao .
     (18) expressao -> expressao . + expressao
     (19) expressao -> expressao . - expressao
     (20) expressao -> expressao . * expressao
     (21) expressao -> expressao . / expressao
-    (40) expressao -> expressao . CONCAT expressao
+    (48) expressao -> expressao . CONCAT expressao
 
     ;               reduce using rule 23 (expressao -> - expressao .)
     +               reduce using rule 23 (expressao -> - expressao .)
@@ -868,6 +1051,7 @@ state 35
     CONCAT          reduce using rule 23 (expressao -> - expressao .)
     )               reduce using rule 23 (expressao -> - expressao .)
     :               reduce using rule 23 (expressao -> - expressao .)
+    ]               reduce using rule 23 (expressao -> - expressao .)
     ,               reduce using rule 23 (expressao -> - expressao .)
     VAR_ID          reduce using rule 23 (expressao -> - expressao .)
     FUNCAO          reduce using rule 23 (expressao -> - expressao .)
@@ -877,41 +1061,93 @@ state 35
     (               reduce using rule 23 (expressao -> - expressao .)
     NUM             reduce using rule 23 (expressao -> - expressao .)
     STRING          reduce using rule 23 (expressao -> - expressao .)
+    [               reduce using rule 23 (expressao -> - expressao .)
+    MAP             reduce using rule 23 (expressao -> - expressao .)
+    FOLD            reduce using rule 23 (expressao -> - expressao .)
     $end            reduce using rule 23 (expressao -> - expressao .)
     SENAO           reduce using rule 23 (expressao -> - expressao .)
     FIM             reduce using rule 23 (expressao -> - expressao .)
 
-  ! +               [ shift and go to state 25 ]
-  ! -               [ shift and go to state 26 ]
-  ! *               [ shift and go to state 27 ]
-  ! /               [ shift and go to state 28 ]
-  ! CONCAT          [ shift and go to state 29 ]
+  ! +               [ shift and go to state 28 ]
+  ! -               [ shift and go to state 29 ]
+  ! *               [ shift and go to state 30 ]
+  ! /               [ shift and go to state 31 ]
+  ! CONCAT          [ shift and go to state 32 ]
 
 
-state 36
+state 39
+
+    (27) expressao -> [ lista_elementos . ]
+    (28) lista_elementos -> lista_elementos . , expressao
+
+    ]               shift and go to state 59
+    ,               shift and go to state 60
+
+
+state 40
+
+    (29) lista_elementos -> expressao .
+    (18) expressao -> expressao . + expressao
+    (19) expressao -> expressao . - expressao
+    (20) expressao -> expressao . * expressao
+    (21) expressao -> expressao . / expressao
+    (48) expressao -> expressao . CONCAT expressao
+
+    ]               reduce using rule 29 (lista_elementos -> expressao .)
+    ,               reduce using rule 29 (lista_elementos -> expressao .)
+    +               shift and go to state 28
+    -               shift and go to state 29
+    *               shift and go to state 30
+    /               shift and go to state 31
+    CONCAT          shift and go to state 32
+
+
+state 41
+
+    (30) lista_elementos -> vazio .
+
+    ]               reduce using rule 30 (lista_elementos -> vazio .)
+    ,               reduce using rule 30 (lista_elementos -> vazio .)
+
+
+state 42
+
+    (31) expressao -> MAP ( . VAR_ID , lista_expressoes )
+
+    VAR_ID          shift and go to state 61
+
+
+state 43
+
+    (32) expressao -> FOLD ( . VAR_ID , lista_expressoes , expressao )
+
+    VAR_ID          shift and go to state 62
+
+
+state 44
 
     (11) declaracao_atribuicao -> declaracao_atribuicao , atribuicao . ;
 
-    ;               shift and go to state 51
+    ;               shift and go to state 63
 
 
-state 37
+state 45
 
     (12) atribuicao -> VAR_ID . = expressao
 
-    =               shift and go to state 52
+    =               shift and go to state 64
 
 
-state 38
+state 46
 
     (9) declaracao_atribuicao -> VAR_ID = lista_expressoes . ;
     (15) lista_expressoes -> lista_expressoes . , expressao
 
-    ;               shift and go to state 53
-    ,               shift and go to state 54
+    ;               shift and go to state 65
+    ,               shift and go to state 66
 
 
-state 39
+state 47
 
     (12) atribuicao -> VAR_ID = expressao .
     (16) lista_expressoes -> expressao .
@@ -919,7 +1155,7 @@ state 39
     (19) expressao -> expressao . - expressao
     (20) expressao -> expressao . * expressao
     (21) expressao -> expressao . / expressao
-    (40) expressao -> expressao . CONCAT expressao
+    (48) expressao -> expressao . CONCAT expressao
 
   ! reduce/reduce conflict for , resolved using rule 12 (atribuicao -> VAR_ID = expressao .)
   ! shift/reduce conflict for - resolved as shift
@@ -932,55 +1168,58 @@ state 39
     (               reduce using rule 12 (atribuicao -> VAR_ID = expressao .)
     NUM             reduce using rule 12 (atribuicao -> VAR_ID = expressao .)
     STRING          reduce using rule 12 (atribuicao -> VAR_ID = expressao .)
+    [               reduce using rule 12 (atribuicao -> VAR_ID = expressao .)
+    MAP             reduce using rule 12 (atribuicao -> VAR_ID = expressao .)
+    FOLD            reduce using rule 12 (atribuicao -> VAR_ID = expressao .)
     $end            reduce using rule 12 (atribuicao -> VAR_ID = expressao .)
     SENAO           reduce using rule 12 (atribuicao -> VAR_ID = expressao .)
     FIM             reduce using rule 12 (atribuicao -> VAR_ID = expressao .)
     ;               reduce using rule 16 (lista_expressoes -> expressao .)
-    +               shift and go to state 25
-    -               shift and go to state 26
-    *               shift and go to state 27
-    /               shift and go to state 28
-    CONCAT          shift and go to state 29
+    +               shift and go to state 28
+    -               shift and go to state 29
+    *               shift and go to state 30
+    /               shift and go to state 31
+    CONCAT          shift and go to state 32
 
   ! -               [ reduce using rule 12 (atribuicao -> VAR_ID = expressao .) ]
   ! ,               [ reduce using rule 16 (lista_expressoes -> expressao .) ]
 
 
-state 40
+state 48
 
-    (27) expressao -> VAR_ID ( lista_expressoes . )
+    (33) expressao -> VAR_ID ( lista_expressoes . )
     (15) lista_expressoes -> lista_expressoes . , expressao
 
-    )               shift and go to state 55
-    ,               shift and go to state 54
+    )               shift and go to state 67
+    ,               shift and go to state 66
 
 
-state 41
+state 49
 
     (16) lista_expressoes -> expressao .
     (18) expressao -> expressao . + expressao
     (19) expressao -> expressao . - expressao
     (20) expressao -> expressao . * expressao
     (21) expressao -> expressao . / expressao
-    (40) expressao -> expressao . CONCAT expressao
+    (48) expressao -> expressao . CONCAT expressao
 
     )               reduce using rule 16 (lista_expressoes -> expressao .)
     ,               reduce using rule 16 (lista_expressoes -> expressao .)
-    +               shift and go to state 25
-    -               shift and go to state 26
-    *               shift and go to state 27
-    /               shift and go to state 28
-    CONCAT          shift and go to state 29
+    +               shift and go to state 28
+    -               shift and go to state 29
+    *               shift and go to state 30
+    /               shift and go to state 31
+    CONCAT          shift and go to state 32
 
 
-state 42
+state 50
 
     (18) expressao -> expressao + expressao .
     (18) expressao -> expressao . + expressao
     (19) expressao -> expressao . - expressao
     (20) expressao -> expressao . * expressao
     (21) expressao -> expressao . / expressao
-    (40) expressao -> expressao . CONCAT expressao
+    (48) expressao -> expressao . CONCAT expressao
 
     ;               reduce using rule 18 (expressao -> expressao + expressao .)
     +               reduce using rule 18 (expressao -> expressao + expressao .)
@@ -988,6 +1227,7 @@ state 42
     CONCAT          reduce using rule 18 (expressao -> expressao + expressao .)
     )               reduce using rule 18 (expressao -> expressao + expressao .)
     :               reduce using rule 18 (expressao -> expressao + expressao .)
+    ]               reduce using rule 18 (expressao -> expressao + expressao .)
     ,               reduce using rule 18 (expressao -> expressao + expressao .)
     VAR_ID          reduce using rule 18 (expressao -> expressao + expressao .)
     FUNCAO          reduce using rule 18 (expressao -> expressao + expressao .)
@@ -997,27 +1237,30 @@ state 42
     (               reduce using rule 18 (expressao -> expressao + expressao .)
     NUM             reduce using rule 18 (expressao -> expressao + expressao .)
     STRING          reduce using rule 18 (expressao -> expressao + expressao .)
+    [               reduce using rule 18 (expressao -> expressao + expressao .)
+    MAP             reduce using rule 18 (expressao -> expressao + expressao .)
+    FOLD            reduce using rule 18 (expressao -> expressao + expressao .)
     $end            reduce using rule 18 (expressao -> expressao + expressao .)
     SENAO           reduce using rule 18 (expressao -> expressao + expressao .)
     FIM             reduce using rule 18 (expressao -> expressao + expressao .)
-    *               shift and go to state 27
-    /               shift and go to state 28
+    *               shift and go to state 30
+    /               shift and go to state 31
 
   ! *               [ reduce using rule 18 (expressao -> expressao + expressao .) ]
   ! /               [ reduce using rule 18 (expressao -> expressao + expressao .) ]
-  ! +               [ shift and go to state 25 ]
-  ! -               [ shift and go to state 26 ]
-  ! CONCAT          [ shift and go to state 29 ]
+  ! +               [ shift and go to state 28 ]
+  ! -               [ shift and go to state 29 ]
+  ! CONCAT          [ shift and go to state 32 ]
 
 
-state 43
+state 51
 
     (19) expressao -> expressao - expressao .
     (18) expressao -> expressao . + expressao
     (19) expressao -> expressao . - expressao
     (20) expressao -> expressao . * expressao
     (21) expressao -> expressao . / expressao
-    (40) expressao -> expressao . CONCAT expressao
+    (48) expressao -> expressao . CONCAT expressao
 
     ;               reduce using rule 19 (expressao -> expressao - expressao .)
     +               reduce using rule 19 (expressao -> expressao - expressao .)
@@ -1025,6 +1268,7 @@ state 43
     CONCAT          reduce using rule 19 (expressao -> expressao - expressao .)
     )               reduce using rule 19 (expressao -> expressao - expressao .)
     :               reduce using rule 19 (expressao -> expressao - expressao .)
+    ]               reduce using rule 19 (expressao -> expressao - expressao .)
     ,               reduce using rule 19 (expressao -> expressao - expressao .)
     VAR_ID          reduce using rule 19 (expressao -> expressao - expressao .)
     FUNCAO          reduce using rule 19 (expressao -> expressao - expressao .)
@@ -1034,27 +1278,30 @@ state 43
     (               reduce using rule 19 (expressao -> expressao - expressao .)
     NUM             reduce using rule 19 (expressao -> expressao - expressao .)
     STRING          reduce using rule 19 (expressao -> expressao - expressao .)
+    [               reduce using rule 19 (expressao -> expressao - expressao .)
+    MAP             reduce using rule 19 (expressao -> expressao - expressao .)
+    FOLD            reduce using rule 19 (expressao -> expressao - expressao .)
     $end            reduce using rule 19 (expressao -> expressao - expressao .)
     SENAO           reduce using rule 19 (expressao -> expressao - expressao .)
     FIM             reduce using rule 19 (expressao -> expressao - expressao .)
-    *               shift and go to state 27
-    /               shift and go to state 28
+    *               shift and go to state 30
+    /               shift and go to state 31
 
   ! *               [ reduce using rule 19 (expressao -> expressao - expressao .) ]
   ! /               [ reduce using rule 19 (expressao -> expressao - expressao .) ]
-  ! +               [ shift and go to state 25 ]
-  ! -               [ shift and go to state 26 ]
-  ! CONCAT          [ shift and go to state 29 ]
+  ! +               [ shift and go to state 28 ]
+  ! -               [ shift and go to state 29 ]
+  ! CONCAT          [ shift and go to state 32 ]
 
 
-state 44
+state 52
 
     (20) expressao -> expressao * expressao .
     (18) expressao -> expressao . + expressao
     (19) expressao -> expressao . - expressao
     (20) expressao -> expressao . * expressao
     (21) expressao -> expressao . / expressao
-    (40) expressao -> expressao . CONCAT expressao
+    (48) expressao -> expressao . CONCAT expressao
 
     ;               reduce using rule 20 (expressao -> expressao * expressao .)
     +               reduce using rule 20 (expressao -> expressao * expressao .)
@@ -1064,6 +1311,7 @@ state 44
     CONCAT          reduce using rule 20 (expressao -> expressao * expressao .)
     )               reduce using rule 20 (expressao -> expressao * expressao .)
     :               reduce using rule 20 (expressao -> expressao * expressao .)
+    ]               reduce using rule 20 (expressao -> expressao * expressao .)
     ,               reduce using rule 20 (expressao -> expressao * expressao .)
     VAR_ID          reduce using rule 20 (expressao -> expressao * expressao .)
     FUNCAO          reduce using rule 20 (expressao -> expressao * expressao .)
@@ -1073,25 +1321,28 @@ state 44
     (               reduce using rule 20 (expressao -> expressao * expressao .)
     NUM             reduce using rule 20 (expressao -> expressao * expressao .)
     STRING          reduce using rule 20 (expressao -> expressao * expressao .)
+    [               reduce using rule 20 (expressao -> expressao * expressao .)
+    MAP             reduce using rule 20 (expressao -> expressao * expressao .)
+    FOLD            reduce using rule 20 (expressao -> expressao * expressao .)
     $end            reduce using rule 20 (expressao -> expressao * expressao .)
     SENAO           reduce using rule 20 (expressao -> expressao * expressao .)
     FIM             reduce using rule 20 (expressao -> expressao * expressao .)
 
-  ! +               [ shift and go to state 25 ]
-  ! -               [ shift and go to state 26 ]
-  ! *               [ shift and go to state 27 ]
-  ! /               [ shift and go to state 28 ]
-  ! CONCAT          [ shift and go to state 29 ]
+  ! +               [ shift and go to state 28 ]
+  ! -               [ shift and go to state 29 ]
+  ! *               [ shift and go to state 30 ]
+  ! /               [ shift and go to state 31 ]
+  ! CONCAT          [ shift and go to state 32 ]
 
 
-state 45
+state 53
 
     (21) expressao -> expressao / expressao .
     (18) expressao -> expressao . + expressao
     (19) expressao -> expressao . - expressao
     (20) expressao -> expressao . * expressao
     (21) expressao -> expressao . / expressao
-    (40) expressao -> expressao . CONCAT expressao
+    (48) expressao -> expressao . CONCAT expressao
 
     ;               reduce using rule 21 (expressao -> expressao / expressao .)
     +               reduce using rule 21 (expressao -> expressao / expressao .)
@@ -1101,6 +1352,7 @@ state 45
     CONCAT          reduce using rule 21 (expressao -> expressao / expressao .)
     )               reduce using rule 21 (expressao -> expressao / expressao .)
     :               reduce using rule 21 (expressao -> expressao / expressao .)
+    ]               reduce using rule 21 (expressao -> expressao / expressao .)
     ,               reduce using rule 21 (expressao -> expressao / expressao .)
     VAR_ID          reduce using rule 21 (expressao -> expressao / expressao .)
     FUNCAO          reduce using rule 21 (expressao -> expressao / expressao .)
@@ -1110,77 +1362,87 @@ state 45
     (               reduce using rule 21 (expressao -> expressao / expressao .)
     NUM             reduce using rule 21 (expressao -> expressao / expressao .)
     STRING          reduce using rule 21 (expressao -> expressao / expressao .)
+    [               reduce using rule 21 (expressao -> expressao / expressao .)
+    MAP             reduce using rule 21 (expressao -> expressao / expressao .)
+    FOLD            reduce using rule 21 (expressao -> expressao / expressao .)
     $end            reduce using rule 21 (expressao -> expressao / expressao .)
     SENAO           reduce using rule 21 (expressao -> expressao / expressao .)
     FIM             reduce using rule 21 (expressao -> expressao / expressao .)
 
-  ! +               [ shift and go to state 25 ]
-  ! -               [ shift and go to state 26 ]
-  ! *               [ shift and go to state 27 ]
-  ! /               [ shift and go to state 28 ]
-  ! CONCAT          [ shift and go to state 29 ]
+  ! +               [ shift and go to state 28 ]
+  ! -               [ shift and go to state 29 ]
+  ! *               [ shift and go to state 30 ]
+  ! /               [ shift and go to state 31 ]
+  ! CONCAT          [ shift and go to state 32 ]
 
 
-state 46
+state 54
 
-    (40) expressao -> expressao CONCAT expressao .
+    (48) expressao -> expressao CONCAT expressao .
     (18) expressao -> expressao . + expressao
     (19) expressao -> expressao . - expressao
     (20) expressao -> expressao . * expressao
     (21) expressao -> expressao . / expressao
-    (40) expressao -> expressao . CONCAT expressao
+    (48) expressao -> expressao . CONCAT expressao
 
   ! shift/reduce conflict for + resolved as shift
   ! shift/reduce conflict for - resolved as shift
   ! shift/reduce conflict for * resolved as shift
   ! shift/reduce conflict for / resolved as shift
   ! shift/reduce conflict for CONCAT resolved as shift
-    ;               reduce using rule 40 (expressao -> expressao CONCAT expressao .)
-    )               reduce using rule 40 (expressao -> expressao CONCAT expressao .)
-    :               reduce using rule 40 (expressao -> expressao CONCAT expressao .)
-    ,               reduce using rule 40 (expressao -> expressao CONCAT expressao .)
-    VAR_ID          reduce using rule 40 (expressao -> expressao CONCAT expressao .)
-    FUNCAO          reduce using rule 40 (expressao -> expressao CONCAT expressao .)
-    SE              reduce using rule 40 (expressao -> expressao CONCAT expressao .)
-    ESCREVER        reduce using rule 40 (expressao -> expressao CONCAT expressao .)
-    COMENTARIO      reduce using rule 40 (expressao -> expressao CONCAT expressao .)
-    (               reduce using rule 40 (expressao -> expressao CONCAT expressao .)
-    NUM             reduce using rule 40 (expressao -> expressao CONCAT expressao .)
-    STRING          reduce using rule 40 (expressao -> expressao CONCAT expressao .)
-    $end            reduce using rule 40 (expressao -> expressao CONCAT expressao .)
-    SENAO           reduce using rule 40 (expressao -> expressao CONCAT expressao .)
-    FIM             reduce using rule 40 (expressao -> expressao CONCAT expressao .)
-    +               shift and go to state 25
-    -               shift and go to state 26
-    *               shift and go to state 27
-    /               shift and go to state 28
-    CONCAT          shift and go to state 29
+    ;               reduce using rule 48 (expressao -> expressao CONCAT expressao .)
+    )               reduce using rule 48 (expressao -> expressao CONCAT expressao .)
+    :               reduce using rule 48 (expressao -> expressao CONCAT expressao .)
+    ]               reduce using rule 48 (expressao -> expressao CONCAT expressao .)
+    ,               reduce using rule 48 (expressao -> expressao CONCAT expressao .)
+    VAR_ID          reduce using rule 48 (expressao -> expressao CONCAT expressao .)
+    FUNCAO          reduce using rule 48 (expressao -> expressao CONCAT expressao .)
+    SE              reduce using rule 48 (expressao -> expressao CONCAT expressao .)
+    ESCREVER        reduce using rule 48 (expressao -> expressao CONCAT expressao .)
+    COMENTARIO      reduce using rule 48 (expressao -> expressao CONCAT expressao .)
+    (               reduce using rule 48 (expressao -> expressao CONCAT expressao .)
+    NUM             reduce using rule 48 (expressao -> expressao CONCAT expressao .)
+    STRING          reduce using rule 48 (expressao -> expressao CONCAT expressao .)
+    [               reduce using rule 48 (expressao -> expressao CONCAT expressao .)
+    MAP             reduce using rule 48 (expressao -> expressao CONCAT expressao .)
+    FOLD            reduce using rule 48 (expressao -> expressao CONCAT expressao .)
+    $end            reduce using rule 48 (expressao -> expressao CONCAT expressao .)
+    SENAO           reduce using rule 48 (expressao -> expressao CONCAT expressao .)
+    FIM             reduce using rule 48 (expressao -> expressao CONCAT expressao .)
+    +               shift and go to state 28
+    -               shift and go to state 29
+    *               shift and go to state 30
+    /               shift and go to state 31
+    CONCAT          shift and go to state 32
 
-  ! +               [ reduce using rule 40 (expressao -> expressao CONCAT expressao .) ]
-  ! -               [ reduce using rule 40 (expressao -> expressao CONCAT expressao .) ]
-  ! *               [ reduce using rule 40 (expressao -> expressao CONCAT expressao .) ]
-  ! /               [ reduce using rule 40 (expressao -> expressao CONCAT expressao .) ]
-  ! CONCAT          [ reduce using rule 40 (expressao -> expressao CONCAT expressao .) ]
+  ! +               [ reduce using rule 48 (expressao -> expressao CONCAT expressao .) ]
+  ! -               [ reduce using rule 48 (expressao -> expressao CONCAT expressao .) ]
+  ! *               [ reduce using rule 48 (expressao -> expressao CONCAT expressao .) ]
+  ! /               [ reduce using rule 48 (expressao -> expressao CONCAT expressao .) ]
+  ! CONCAT          [ reduce using rule 48 (expressao -> expressao CONCAT expressao .) ]
 
 
-state 47
+state 55
 
-    (28) declaracao_funcao -> FUNCAO VAR_ID ( . lista_parametros_opcional ) : bloco_funcao FIM
-    (29) declaracao_funcao -> FUNCAO VAR_ID ( . lista_parametros_opcional ) , : expressao ;
-    (30) lista_parametros_opcional -> . lista_parametros
-    (31) lista_parametros_opcional -> . vazio
-    (32) lista_parametros -> . lista_parametros , VAR_ID
-    (33) lista_parametros -> . VAR_ID
-    (39) vazio -> .
+    (34) declaracao_funcao -> FUNCAO VAR_ID ( . lista_parametros_opcional ) : bloco_funcao FIM
+    (35) declaracao_funcao -> FUNCAO VAR_ID ( . lista_parametros_opcional ) , : expressao ;
+    (36) lista_parametros_opcional -> . lista_parametros
+    (37) lista_parametros_opcional -> . vazio
+    (38) lista_parametros -> . lista_parametros , VAR_ID
+    (39) lista_parametros -> . lista_parametros , NUM
+    (40) lista_parametros -> . VAR_ID
+    (41) lista_parametros -> . NUM
+    (47) vazio -> .
 
-    VAR_ID          shift and go to state 56
-    )               reduce using rule 39 (vazio -> .)
+    VAR_ID          shift and go to state 68
+    NUM             shift and go to state 72
+    )               reduce using rule 47 (vazio -> .)
 
-    lista_parametros_opcional      shift and go to state 57
-    lista_parametros               shift and go to state 58
-    vazio                          shift and go to state 59
+    lista_parametros_opcional      shift and go to state 69
+    lista_parametros               shift and go to state 70
+    vazio                          shift and go to state 71
 
-state 48
+state 56
 
     (22) expressao -> ( expressao ) .
 
@@ -1192,6 +1454,7 @@ state 48
     CONCAT          reduce using rule 22 (expressao -> ( expressao ) .)
     )               reduce using rule 22 (expressao -> ( expressao ) .)
     :               reduce using rule 22 (expressao -> ( expressao ) .)
+    ]               reduce using rule 22 (expressao -> ( expressao ) .)
     ,               reduce using rule 22 (expressao -> ( expressao ) .)
     VAR_ID          reduce using rule 22 (expressao -> ( expressao ) .)
     FUNCAO          reduce using rule 22 (expressao -> ( expressao ) .)
@@ -1201,14 +1464,17 @@ state 48
     (               reduce using rule 22 (expressao -> ( expressao ) .)
     NUM             reduce using rule 22 (expressao -> ( expressao ) .)
     STRING          reduce using rule 22 (expressao -> ( expressao ) .)
+    [               reduce using rule 22 (expressao -> ( expressao ) .)
+    MAP             reduce using rule 22 (expressao -> ( expressao ) .)
+    FOLD            reduce using rule 22 (expressao -> ( expressao ) .)
     $end            reduce using rule 22 (expressao -> ( expressao ) .)
     SENAO           reduce using rule 22 (expressao -> ( expressao ) .)
     FIM             reduce using rule 22 (expressao -> ( expressao ) .)
 
 
-state 49
+state 57
 
-    (34) declaracao_se -> SE expressao : . lista_declaracoes senao_opcional FIM
+    (42) declaracao_se -> SE expressao : . lista_declaracoes senao_opcional FIM
     (1) lista_declaracoes -> . declaracao
     (2) lista_declaracoes -> . lista_declaracoes declaracao
     (3) declaracao -> . declaracao_atribuicao
@@ -1221,11 +1487,11 @@ state 49
     (10) declaracao_atribuicao -> . atribuicao
     (11) declaracao_atribuicao -> . declaracao_atribuicao , atribuicao ;
     (17) declaracao_expressao -> . expressao ;
-    (28) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM
-    (29) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ;
-    (34) declaracao_se -> . SE expressao : lista_declaracoes senao_opcional FIM
-    (37) declaracao_escrever -> . ESCREVER ( expressao ) ;
-    (38) declaracao_comentario -> . COMENTARIO
+    (34) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM
+    (35) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ;
+    (42) declaracao_se -> . SE expressao : lista_declaracoes senao_opcional FIM
+    (45) declaracao_escrever -> . ESCREVER ( expressao ) ;
+    (46) declaracao_comentario -> . COMENTARIO
     (12) atribuicao -> . VAR_ID = expressao
     (18) expressao -> . expressao + expressao
     (19) expressao -> . expressao - expressao
@@ -1236,8 +1502,11 @@ state 49
     (24) expressao -> . NUM
     (25) expressao -> . STRING
     (26) expressao -> . VAR_ID
-    (27) expressao -> . VAR_ID ( lista_expressoes )
-    (40) expressao -> . expressao CONCAT expressao
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
 
     VAR_ID          shift and go to state 9
     FUNCAO          shift and go to state 12
@@ -1248,9 +1517,12 @@ state 49
     -               shift and go to state 17
     NUM             shift and go to state 18
     STRING          shift and go to state 19
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
 
     expressao                      shift and go to state 11
-    lista_declaracoes              shift and go to state 60
+    lista_declaracoes              shift and go to state 73
     declaracao                     shift and go to state 2
     declaracao_atribuicao          shift and go to state 3
     declaracao_expressao           shift and go to state 4
@@ -1260,24 +1532,97 @@ state 49
     declaracao_comentario          shift and go to state 8
     atribuicao                     shift and go to state 10
 
-state 50
+state 58
 
-    (37) declaracao_escrever -> ESCREVER ( expressao . ) ;
+    (45) declaracao_escrever -> ESCREVER ( expressao . ) ;
     (18) expressao -> expressao . + expressao
     (19) expressao -> expressao . - expressao
     (20) expressao -> expressao . * expressao
     (21) expressao -> expressao . / expressao
-    (40) expressao -> expressao . CONCAT expressao
+    (48) expressao -> expressao . CONCAT expressao
 
-    )               shift and go to state 61
-    +               shift and go to state 25
-    -               shift and go to state 26
-    *               shift and go to state 27
-    /               shift and go to state 28
-    CONCAT          shift and go to state 29
+    )               shift and go to state 74
+    +               shift and go to state 28
+    -               shift and go to state 29
+    *               shift and go to state 30
+    /               shift and go to state 31
+    CONCAT          shift and go to state 32
 
 
-state 51
+state 59
+
+    (27) expressao -> [ lista_elementos ] .
+
+    ;               reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    +               reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    -               reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    *               reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    /               reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    CONCAT          reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    )               reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    :               reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    ]               reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    ,               reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    VAR_ID          reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    FUNCAO          reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    SE              reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    ESCREVER        reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    COMENTARIO      reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    (               reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    NUM             reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    STRING          reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    [               reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    MAP             reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    FOLD            reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    $end            reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    SENAO           reduce using rule 27 (expressao -> [ lista_elementos ] .)
+    FIM             reduce using rule 27 (expressao -> [ lista_elementos ] .)
+
+
+state 60
+
+    (28) lista_elementos -> lista_elementos , . expressao
+    (18) expressao -> . expressao + expressao
+    (19) expressao -> . expressao - expressao
+    (20) expressao -> . expressao * expressao
+    (21) expressao -> . expressao / expressao
+    (22) expressao -> . ( expressao )
+    (23) expressao -> . - expressao
+    (24) expressao -> . NUM
+    (25) expressao -> . STRING
+    (26) expressao -> . VAR_ID
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
+
+    (               shift and go to state 13
+    -               shift and go to state 17
+    NUM             shift and go to state 18
+    STRING          shift and go to state 19
+    VAR_ID          shift and go to state 35
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
+
+    expressao                      shift and go to state 75
+
+state 61
+
+    (31) expressao -> MAP ( VAR_ID . , lista_expressoes )
+
+    ,               shift and go to state 76
+
+
+state 62
+
+    (32) expressao -> FOLD ( VAR_ID . , lista_expressoes , expressao )
+
+    ,               shift and go to state 77
+
+
+state 63
 
     (11) declaracao_atribuicao -> declaracao_atribuicao , atribuicao ; .
 
@@ -1291,12 +1636,15 @@ state 51
     -               reduce using rule 11 (declaracao_atribuicao -> declaracao_atribuicao , atribuicao ; .)
     NUM             reduce using rule 11 (declaracao_atribuicao -> declaracao_atribuicao , atribuicao ; .)
     STRING          reduce using rule 11 (declaracao_atribuicao -> declaracao_atribuicao , atribuicao ; .)
+    [               reduce using rule 11 (declaracao_atribuicao -> declaracao_atribuicao , atribuicao ; .)
+    MAP             reduce using rule 11 (declaracao_atribuicao -> declaracao_atribuicao , atribuicao ; .)
+    FOLD            reduce using rule 11 (declaracao_atribuicao -> declaracao_atribuicao , atribuicao ; .)
     $end            reduce using rule 11 (declaracao_atribuicao -> declaracao_atribuicao , atribuicao ; .)
     SENAO           reduce using rule 11 (declaracao_atribuicao -> declaracao_atribuicao , atribuicao ; .)
     FIM             reduce using rule 11 (declaracao_atribuicao -> declaracao_atribuicao , atribuicao ; .)
 
 
-state 52
+state 64
 
     (12) atribuicao -> VAR_ID = . expressao
     (18) expressao -> . expressao + expressao
@@ -1308,18 +1656,24 @@ state 52
     (24) expressao -> . NUM
     (25) expressao -> . STRING
     (26) expressao -> . VAR_ID
-    (27) expressao -> . VAR_ID ( lista_expressoes )
-    (40) expressao -> . expressao CONCAT expressao
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
 
     (               shift and go to state 13
     -               shift and go to state 17
     NUM             shift and go to state 18
     STRING          shift and go to state 19
-    VAR_ID          shift and go to state 32
+    VAR_ID          shift and go to state 35
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
 
-    expressao                      shift and go to state 62
+    expressao                      shift and go to state 78
 
-state 53
+state 65
 
     (9) declaracao_atribuicao -> VAR_ID = lista_expressoes ; .
 
@@ -1333,12 +1687,15 @@ state 53
     -               reduce using rule 9 (declaracao_atribuicao -> VAR_ID = lista_expressoes ; .)
     NUM             reduce using rule 9 (declaracao_atribuicao -> VAR_ID = lista_expressoes ; .)
     STRING          reduce using rule 9 (declaracao_atribuicao -> VAR_ID = lista_expressoes ; .)
+    [               reduce using rule 9 (declaracao_atribuicao -> VAR_ID = lista_expressoes ; .)
+    MAP             reduce using rule 9 (declaracao_atribuicao -> VAR_ID = lista_expressoes ; .)
+    FOLD            reduce using rule 9 (declaracao_atribuicao -> VAR_ID = lista_expressoes ; .)
     $end            reduce using rule 9 (declaracao_atribuicao -> VAR_ID = lista_expressoes ; .)
     SENAO           reduce using rule 9 (declaracao_atribuicao -> VAR_ID = lista_expressoes ; .)
     FIM             reduce using rule 9 (declaracao_atribuicao -> VAR_ID = lista_expressoes ; .)
 
 
-state 54
+state 66
 
     (15) lista_expressoes -> lista_expressoes , . expressao
     (18) expressao -> . expressao + expressao
@@ -1350,97 +1707,116 @@ state 54
     (24) expressao -> . NUM
     (25) expressao -> . STRING
     (26) expressao -> . VAR_ID
-    (27) expressao -> . VAR_ID ( lista_expressoes )
-    (40) expressao -> . expressao CONCAT expressao
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
 
     (               shift and go to state 13
     -               shift and go to state 17
     NUM             shift and go to state 18
     STRING          shift and go to state 19
-    VAR_ID          shift and go to state 32
+    VAR_ID          shift and go to state 35
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
 
-    expressao                      shift and go to state 63
+    expressao                      shift and go to state 79
 
-state 55
+state 67
 
-    (27) expressao -> VAR_ID ( lista_expressoes ) .
+    (33) expressao -> VAR_ID ( lista_expressoes ) .
 
-    ;               reduce using rule 27 (expressao -> VAR_ID ( lista_expressoes ) .)
-    +               reduce using rule 27 (expressao -> VAR_ID ( lista_expressoes ) .)
-    -               reduce using rule 27 (expressao -> VAR_ID ( lista_expressoes ) .)
-    *               reduce using rule 27 (expressao -> VAR_ID ( lista_expressoes ) .)
-    /               reduce using rule 27 (expressao -> VAR_ID ( lista_expressoes ) .)
-    CONCAT          reduce using rule 27 (expressao -> VAR_ID ( lista_expressoes ) .)
-    )               reduce using rule 27 (expressao -> VAR_ID ( lista_expressoes ) .)
-    :               reduce using rule 27 (expressao -> VAR_ID ( lista_expressoes ) .)
-    ,               reduce using rule 27 (expressao -> VAR_ID ( lista_expressoes ) .)
-    VAR_ID          reduce using rule 27 (expressao -> VAR_ID ( lista_expressoes ) .)
-    FUNCAO          reduce using rule 27 (expressao -> VAR_ID ( lista_expressoes ) .)
-    SE              reduce using rule 27 (expressao -> VAR_ID ( lista_expressoes ) .)
-    ESCREVER        reduce using rule 27 (expressao -> VAR_ID ( lista_expressoes ) .)
-    COMENTARIO      reduce using rule 27 (expressao -> VAR_ID ( lista_expressoes ) .)
-    (               reduce using rule 27 (expressao -> VAR_ID ( lista_expressoes ) .)
-    NUM             reduce using rule 27 (expressao -> VAR_ID ( lista_expressoes ) .)
-    STRING          reduce using rule 27 (expressao -> VAR_ID ( lista_expressoes ) .)
-    $end            reduce using rule 27 (expressao -> VAR_ID ( lista_expressoes ) .)
-    SENAO           reduce using rule 27 (expressao -> VAR_ID ( lista_expressoes ) .)
-    FIM             reduce using rule 27 (expressao -> VAR_ID ( lista_expressoes ) .)
-
-
-state 56
-
-    (33) lista_parametros -> VAR_ID .
-
-    ,               reduce using rule 33 (lista_parametros -> VAR_ID .)
-    )               reduce using rule 33 (lista_parametros -> VAR_ID .)
-
-
-state 57
-
-    (28) declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional . ) : bloco_funcao FIM
-    (29) declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional . ) , : expressao ;
-
-    )               shift and go to state 64
+    ;               reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    +               reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    -               reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    *               reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    /               reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    CONCAT          reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    )               reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    :               reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    ]               reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    ,               reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    VAR_ID          reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    FUNCAO          reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    SE              reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    ESCREVER        reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    COMENTARIO      reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    (               reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    NUM             reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    STRING          reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    [               reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    MAP             reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    FOLD            reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    $end            reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    SENAO           reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
+    FIM             reduce using rule 33 (expressao -> VAR_ID ( lista_expressoes ) .)
 
 
-state 58
+state 68
 
-    (30) lista_parametros_opcional -> lista_parametros .
-    (32) lista_parametros -> lista_parametros . , VAR_ID
+    (40) lista_parametros -> VAR_ID .
 
-    )               reduce using rule 30 (lista_parametros_opcional -> lista_parametros .)
-    ,               shift and go to state 65
-
-
-state 59
-
-    (31) lista_parametros_opcional -> vazio .
-
-    )               reduce using rule 31 (lista_parametros_opcional -> vazio .)
+    ,               reduce using rule 40 (lista_parametros -> VAR_ID .)
+    )               reduce using rule 40 (lista_parametros -> VAR_ID .)
 
 
-state 60
+state 69
 
-    (34) declaracao_se -> SE expressao : lista_declaracoes . senao_opcional FIM
+    (34) declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional . ) : bloco_funcao FIM
+    (35) declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional . ) , : expressao ;
+
+    )               shift and go to state 80
+
+
+state 70
+
+    (36) lista_parametros_opcional -> lista_parametros .
+    (38) lista_parametros -> lista_parametros . , VAR_ID
+    (39) lista_parametros -> lista_parametros . , NUM
+
+    )               reduce using rule 36 (lista_parametros_opcional -> lista_parametros .)
+    ,               shift and go to state 81
+
+
+state 71
+
+    (37) lista_parametros_opcional -> vazio .
+
+    )               reduce using rule 37 (lista_parametros_opcional -> vazio .)
+
+
+state 72
+
+    (41) lista_parametros -> NUM .
+
+    ,               reduce using rule 41 (lista_parametros -> NUM .)
+    )               reduce using rule 41 (lista_parametros -> NUM .)
+
+
+state 73
+
+    (42) declaracao_se -> SE expressao : lista_declaracoes . senao_opcional FIM
     (2) lista_declaracoes -> lista_declaracoes . declaracao
-    (35) senao_opcional -> . SENAO : lista_declaracoes
-    (36) senao_opcional -> . vazio
+    (43) senao_opcional -> . SENAO : lista_declaracoes
+    (44) senao_opcional -> . vazio
     (3) declaracao -> . declaracao_atribuicao
     (4) declaracao -> . declaracao_expressao
     (5) declaracao -> . declaracao_funcao
     (6) declaracao -> . declaracao_se
     (7) declaracao -> . declaracao_escrever
     (8) declaracao -> . declaracao_comentario
-    (39) vazio -> .
+    (47) vazio -> .
     (9) declaracao_atribuicao -> . VAR_ID = lista_expressoes ;
     (10) declaracao_atribuicao -> . atribuicao
     (11) declaracao_atribuicao -> . declaracao_atribuicao , atribuicao ;
     (17) declaracao_expressao -> . expressao ;
-    (28) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM
-    (29) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ;
-    (34) declaracao_se -> . SE expressao : lista_declaracoes senao_opcional FIM
-    (37) declaracao_escrever -> . ESCREVER ( expressao ) ;
-    (38) declaracao_comentario -> . COMENTARIO
+    (34) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM
+    (35) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ;
+    (42) declaracao_se -> . SE expressao : lista_declaracoes senao_opcional FIM
+    (45) declaracao_escrever -> . ESCREVER ( expressao ) ;
+    (46) declaracao_comentario -> . COMENTARIO
     (12) atribuicao -> . VAR_ID = expressao
     (18) expressao -> . expressao + expressao
     (19) expressao -> . expressao - expressao
@@ -1451,11 +1827,14 @@ state 60
     (24) expressao -> . NUM
     (25) expressao -> . STRING
     (26) expressao -> . VAR_ID
-    (27) expressao -> . VAR_ID ( lista_expressoes )
-    (40) expressao -> . expressao CONCAT expressao
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
 
-    SENAO           shift and go to state 67
-    FIM             reduce using rule 39 (vazio -> .)
+    SENAO           shift and go to state 83
+    FIM             reduce using rule 47 (vazio -> .)
     VAR_ID          shift and go to state 9
     FUNCAO          shift and go to state 12
     SE              shift and go to state 14
@@ -1465,11 +1844,14 @@ state 60
     -               shift and go to state 17
     NUM             shift and go to state 18
     STRING          shift and go to state 19
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
 
     expressao                      shift and go to state 11
-    senao_opcional                 shift and go to state 66
-    declaracao                     shift and go to state 20
-    vazio                          shift and go to state 68
+    senao_opcional                 shift and go to state 82
+    declaracao                     shift and go to state 23
+    vazio                          shift and go to state 84
     declaracao_atribuicao          shift and go to state 3
     declaracao_expressao           shift and go to state 4
     declaracao_funcao              shift and go to state 5
@@ -1478,444 +1860,704 @@ state 60
     declaracao_comentario          shift and go to state 8
     atribuicao                     shift and go to state 10
 
-state 61
+state 74
 
-    (37) declaracao_escrever -> ESCREVER ( expressao ) . ;
+    (45) declaracao_escrever -> ESCREVER ( expressao ) . ;
 
-    ;               shift and go to state 69
+    ;               shift and go to state 85
 
 
-state 62
+state 75
+
+    (28) lista_elementos -> lista_elementos , expressao .
+    (18) expressao -> expressao . + expressao
+    (19) expressao -> expressao . - expressao
+    (20) expressao -> expressao . * expressao
+    (21) expressao -> expressao . / expressao
+    (48) expressao -> expressao . CONCAT expressao
+
+    ]               reduce using rule 28 (lista_elementos -> lista_elementos , expressao .)
+    ,               reduce using rule 28 (lista_elementos -> lista_elementos , expressao .)
+    +               shift and go to state 28
+    -               shift and go to state 29
+    *               shift and go to state 30
+    /               shift and go to state 31
+    CONCAT          shift and go to state 32
+
+
+state 76
+
+    (31) expressao -> MAP ( VAR_ID , . lista_expressoes )
+    (15) lista_expressoes -> . lista_expressoes , expressao
+    (16) lista_expressoes -> . expressao
+    (18) expressao -> . expressao + expressao
+    (19) expressao -> . expressao - expressao
+    (20) expressao -> . expressao * expressao
+    (21) expressao -> . expressao / expressao
+    (22) expressao -> . ( expressao )
+    (23) expressao -> . - expressao
+    (24) expressao -> . NUM
+    (25) expressao -> . STRING
+    (26) expressao -> . VAR_ID
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
+
+    (               shift and go to state 13
+    -               shift and go to state 17
+    NUM             shift and go to state 18
+    STRING          shift and go to state 19
+    VAR_ID          shift and go to state 35
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
+
+    lista_expressoes               shift and go to state 86
+    expressao                      shift and go to state 49
+
+state 77
+
+    (32) expressao -> FOLD ( VAR_ID , . lista_expressoes , expressao )
+    (15) lista_expressoes -> . lista_expressoes , expressao
+    (16) lista_expressoes -> . expressao
+    (18) expressao -> . expressao + expressao
+    (19) expressao -> . expressao - expressao
+    (20) expressao -> . expressao * expressao
+    (21) expressao -> . expressao / expressao
+    (22) expressao -> . ( expressao )
+    (23) expressao -> . - expressao
+    (24) expressao -> . NUM
+    (25) expressao -> . STRING
+    (26) expressao -> . VAR_ID
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
+
+    (               shift and go to state 13
+    -               shift and go to state 17
+    NUM             shift and go to state 18
+    STRING          shift and go to state 19
+    VAR_ID          shift and go to state 35
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
+
+    lista_expressoes               shift and go to state 87
+    expressao                      shift and go to state 49
+
+state 78
 
     (12) atribuicao -> VAR_ID = expressao .
     (18) expressao -> expressao . + expressao
     (19) expressao -> expressao . - expressao
     (20) expressao -> expressao . * expressao
     (21) expressao -> expressao . / expressao
-    (40) expressao -> expressao . CONCAT expressao
+    (48) expressao -> expressao . CONCAT expressao
 
     ;               reduce using rule 12 (atribuicao -> VAR_ID = expressao .)
-    +               shift and go to state 25
-    -               shift and go to state 26
-    *               shift and go to state 27
-    /               shift and go to state 28
-    CONCAT          shift and go to state 29
+    +               shift and go to state 28
+    -               shift and go to state 29
+    *               shift and go to state 30
+    /               shift and go to state 31
+    CONCAT          shift and go to state 32
 
 
-state 63
+state 79
 
     (15) lista_expressoes -> lista_expressoes , expressao .
     (18) expressao -> expressao . + expressao
     (19) expressao -> expressao . - expressao
     (20) expressao -> expressao . * expressao
     (21) expressao -> expressao . / expressao
-    (40) expressao -> expressao . CONCAT expressao
+    (48) expressao -> expressao . CONCAT expressao
 
     ;               reduce using rule 15 (lista_expressoes -> lista_expressoes , expressao .)
     ,               reduce using rule 15 (lista_expressoes -> lista_expressoes , expressao .)
     )               reduce using rule 15 (lista_expressoes -> lista_expressoes , expressao .)
-    +               shift and go to state 25
-    -               shift and go to state 26
-    *               shift and go to state 27
-    /               shift and go to state 28
-    CONCAT          shift and go to state 29
-
-
-state 64
-
-    (28) declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) . : bloco_funcao FIM
-    (29) declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) . , : expressao ;
-
-    :               shift and go to state 70
-    ,               shift and go to state 71
-
-
-state 65
-
-    (32) lista_parametros -> lista_parametros , . VAR_ID
-
-    VAR_ID          shift and go to state 72
-
-
-state 66
-
-    (34) declaracao_se -> SE expressao : lista_declaracoes senao_opcional . FIM
-
-    FIM             shift and go to state 73
-
-
-state 67
-
-    (35) senao_opcional -> SENAO . : lista_declaracoes
-
-    :               shift and go to state 74
-
-
-state 68
-
-    (36) senao_opcional -> vazio .
-
-    FIM             reduce using rule 36 (senao_opcional -> vazio .)
-
-
-state 69
-
-    (37) declaracao_escrever -> ESCREVER ( expressao ) ; .
-
-    VAR_ID          reduce using rule 37 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
-    FUNCAO          reduce using rule 37 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
-    SE              reduce using rule 37 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
-    ESCREVER        reduce using rule 37 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
-    COMENTARIO      reduce using rule 37 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
-    (               reduce using rule 37 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
-    -               reduce using rule 37 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
-    NUM             reduce using rule 37 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
-    STRING          reduce using rule 37 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
-    $end            reduce using rule 37 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
-    SENAO           reduce using rule 37 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
-    FIM             reduce using rule 37 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
-
-
-state 70
-
-    (28) declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : . bloco_funcao FIM
-    (41) bloco_funcao -> . lista_declaracoes
-    (1) lista_declaracoes -> . declaracao
-    (2) lista_declaracoes -> . lista_declaracoes declaracao
-    (3) declaracao -> . declaracao_atribuicao
-    (4) declaracao -> . declaracao_expressao
-    (5) declaracao -> . declaracao_funcao
-    (6) declaracao -> . declaracao_se
-    (7) declaracao -> . declaracao_escrever
-    (8) declaracao -> . declaracao_comentario
-    (9) declaracao_atribuicao -> . VAR_ID = lista_expressoes ;
-    (10) declaracao_atribuicao -> . atribuicao
-    (11) declaracao_atribuicao -> . declaracao_atribuicao , atribuicao ;
-    (17) declaracao_expressao -> . expressao ;
-    (28) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM
-    (29) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ;
-    (34) declaracao_se -> . SE expressao : lista_declaracoes senao_opcional FIM
-    (37) declaracao_escrever -> . ESCREVER ( expressao ) ;
-    (38) declaracao_comentario -> . COMENTARIO
-    (12) atribuicao -> . VAR_ID = expressao
-    (18) expressao -> . expressao + expressao
-    (19) expressao -> . expressao - expressao
-    (20) expressao -> . expressao * expressao
-    (21) expressao -> . expressao / expressao
-    (22) expressao -> . ( expressao )
-    (23) expressao -> . - expressao
-    (24) expressao -> . NUM
-    (25) expressao -> . STRING
-    (26) expressao -> . VAR_ID
-    (27) expressao -> . VAR_ID ( lista_expressoes )
-    (40) expressao -> . expressao CONCAT expressao
-
-    VAR_ID          shift and go to state 9
-    FUNCAO          shift and go to state 12
-    SE              shift and go to state 14
-    ESCREVER        shift and go to state 15
-    COMENTARIO      shift and go to state 16
-    (               shift and go to state 13
-    -               shift and go to state 17
-    NUM             shift and go to state 18
-    STRING          shift and go to state 19
-
-    bloco_funcao                   shift and go to state 75
-    lista_declaracoes              shift and go to state 76
-    declaracao                     shift and go to state 2
-    declaracao_atribuicao          shift and go to state 3
-    declaracao_expressao           shift and go to state 4
-    declaracao_funcao              shift and go to state 5
-    declaracao_se                  shift and go to state 6
-    declaracao_escrever            shift and go to state 7
-    declaracao_comentario          shift and go to state 8
-    atribuicao                     shift and go to state 10
-    expressao                      shift and go to state 11
-
-state 71
-
-    (29) declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , . : expressao ;
-
-    :               shift and go to state 77
-
-
-state 72
-
-    (32) lista_parametros -> lista_parametros , VAR_ID .
-
-    ,               reduce using rule 32 (lista_parametros -> lista_parametros , VAR_ID .)
-    )               reduce using rule 32 (lista_parametros -> lista_parametros , VAR_ID .)
-
-
-state 73
-
-    (34) declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .
-
-    VAR_ID          reduce using rule 34 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
-    FUNCAO          reduce using rule 34 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
-    SE              reduce using rule 34 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
-    ESCREVER        reduce using rule 34 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
-    COMENTARIO      reduce using rule 34 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
-    (               reduce using rule 34 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
-    -               reduce using rule 34 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
-    NUM             reduce using rule 34 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
-    STRING          reduce using rule 34 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
-    $end            reduce using rule 34 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
-    SENAO           reduce using rule 34 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
-    FIM             reduce using rule 34 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
-
-
-state 74
-
-    (35) senao_opcional -> SENAO : . lista_declaracoes
-    (1) lista_declaracoes -> . declaracao
-    (2) lista_declaracoes -> . lista_declaracoes declaracao
-    (3) declaracao -> . declaracao_atribuicao
-    (4) declaracao -> . declaracao_expressao
-    (5) declaracao -> . declaracao_funcao
-    (6) declaracao -> . declaracao_se
-    (7) declaracao -> . declaracao_escrever
-    (8) declaracao -> . declaracao_comentario
-    (9) declaracao_atribuicao -> . VAR_ID = lista_expressoes ;
-    (10) declaracao_atribuicao -> . atribuicao
-    (11) declaracao_atribuicao -> . declaracao_atribuicao , atribuicao ;
-    (17) declaracao_expressao -> . expressao ;
-    (28) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM
-    (29) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ;
-    (34) declaracao_se -> . SE expressao : lista_declaracoes senao_opcional FIM
-    (37) declaracao_escrever -> . ESCREVER ( expressao ) ;
-    (38) declaracao_comentario -> . COMENTARIO
-    (12) atribuicao -> . VAR_ID = expressao
-    (18) expressao -> . expressao + expressao
-    (19) expressao -> . expressao - expressao
-    (20) expressao -> . expressao * expressao
-    (21) expressao -> . expressao / expressao
-    (22) expressao -> . ( expressao )
-    (23) expressao -> . - expressao
-    (24) expressao -> . NUM
-    (25) expressao -> . STRING
-    (26) expressao -> . VAR_ID
-    (27) expressao -> . VAR_ID ( lista_expressoes )
-    (40) expressao -> . expressao CONCAT expressao
-
-    VAR_ID          shift and go to state 9
-    FUNCAO          shift and go to state 12
-    SE              shift and go to state 14
-    ESCREVER        shift and go to state 15
-    COMENTARIO      shift and go to state 16
-    (               shift and go to state 13
-    -               shift and go to state 17
-    NUM             shift and go to state 18
-    STRING          shift and go to state 19
-
-    lista_declaracoes              shift and go to state 78
-    declaracao                     shift and go to state 2
-    declaracao_atribuicao          shift and go to state 3
-    declaracao_expressao           shift and go to state 4
-    declaracao_funcao              shift and go to state 5
-    declaracao_se                  shift and go to state 6
-    declaracao_escrever            shift and go to state 7
-    declaracao_comentario          shift and go to state 8
-    atribuicao                     shift and go to state 10
-    expressao                      shift and go to state 11
-
-state 75
-
-    (28) declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao . FIM
-
-    FIM             shift and go to state 79
-
-
-state 76
-
-    (41) bloco_funcao -> lista_declaracoes .
-    (2) lista_declaracoes -> lista_declaracoes . declaracao
-    (3) declaracao -> . declaracao_atribuicao
-    (4) declaracao -> . declaracao_expressao
-    (5) declaracao -> . declaracao_funcao
-    (6) declaracao -> . declaracao_se
-    (7) declaracao -> . declaracao_escrever
-    (8) declaracao -> . declaracao_comentario
-    (9) declaracao_atribuicao -> . VAR_ID = lista_expressoes ;
-    (10) declaracao_atribuicao -> . atribuicao
-    (11) declaracao_atribuicao -> . declaracao_atribuicao , atribuicao ;
-    (17) declaracao_expressao -> . expressao ;
-    (28) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM
-    (29) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ;
-    (34) declaracao_se -> . SE expressao : lista_declaracoes senao_opcional FIM
-    (37) declaracao_escrever -> . ESCREVER ( expressao ) ;
-    (38) declaracao_comentario -> . COMENTARIO
-    (12) atribuicao -> . VAR_ID = expressao
-    (18) expressao -> . expressao + expressao
-    (19) expressao -> . expressao - expressao
-    (20) expressao -> . expressao * expressao
-    (21) expressao -> . expressao / expressao
-    (22) expressao -> . ( expressao )
-    (23) expressao -> . - expressao
-    (24) expressao -> . NUM
-    (25) expressao -> . STRING
-    (26) expressao -> . VAR_ID
-    (27) expressao -> . VAR_ID ( lista_expressoes )
-    (40) expressao -> . expressao CONCAT expressao
-
-    FIM             reduce using rule 41 (bloco_funcao -> lista_declaracoes .)
-    VAR_ID          shift and go to state 9
-    FUNCAO          shift and go to state 12
-    SE              shift and go to state 14
-    ESCREVER        shift and go to state 15
-    COMENTARIO      shift and go to state 16
-    (               shift and go to state 13
-    -               shift and go to state 17
-    NUM             shift and go to state 18
-    STRING          shift and go to state 19
-
-    declaracao                     shift and go to state 20
-    declaracao_atribuicao          shift and go to state 3
-    declaracao_expressao           shift and go to state 4
-    declaracao_funcao              shift and go to state 5
-    declaracao_se                  shift and go to state 6
-    declaracao_escrever            shift and go to state 7
-    declaracao_comentario          shift and go to state 8
-    atribuicao                     shift and go to state 10
-    expressao                      shift and go to state 11
-
-state 77
-
-    (29) declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : . expressao ;
-    (18) expressao -> . expressao + expressao
-    (19) expressao -> . expressao - expressao
-    (20) expressao -> . expressao * expressao
-    (21) expressao -> . expressao / expressao
-    (22) expressao -> . ( expressao )
-    (23) expressao -> . - expressao
-    (24) expressao -> . NUM
-    (25) expressao -> . STRING
-    (26) expressao -> . VAR_ID
-    (27) expressao -> . VAR_ID ( lista_expressoes )
-    (40) expressao -> . expressao CONCAT expressao
-
-    (               shift and go to state 13
-    -               shift and go to state 17
-    NUM             shift and go to state 18
-    STRING          shift and go to state 19
-    VAR_ID          shift and go to state 32
-
-    expressao                      shift and go to state 80
-
-state 78
-
-    (35) senao_opcional -> SENAO : lista_declaracoes .
-    (2) lista_declaracoes -> lista_declaracoes . declaracao
-    (3) declaracao -> . declaracao_atribuicao
-    (4) declaracao -> . declaracao_expressao
-    (5) declaracao -> . declaracao_funcao
-    (6) declaracao -> . declaracao_se
-    (7) declaracao -> . declaracao_escrever
-    (8) declaracao -> . declaracao_comentario
-    (9) declaracao_atribuicao -> . VAR_ID = lista_expressoes ;
-    (10) declaracao_atribuicao -> . atribuicao
-    (11) declaracao_atribuicao -> . declaracao_atribuicao , atribuicao ;
-    (17) declaracao_expressao -> . expressao ;
-    (28) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM
-    (29) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ;
-    (34) declaracao_se -> . SE expressao : lista_declaracoes senao_opcional FIM
-    (37) declaracao_escrever -> . ESCREVER ( expressao ) ;
-    (38) declaracao_comentario -> . COMENTARIO
-    (12) atribuicao -> . VAR_ID = expressao
-    (18) expressao -> . expressao + expressao
-    (19) expressao -> . expressao - expressao
-    (20) expressao -> . expressao * expressao
-    (21) expressao -> . expressao / expressao
-    (22) expressao -> . ( expressao )
-    (23) expressao -> . - expressao
-    (24) expressao -> . NUM
-    (25) expressao -> . STRING
-    (26) expressao -> . VAR_ID
-    (27) expressao -> . VAR_ID ( lista_expressoes )
-    (40) expressao -> . expressao CONCAT expressao
-
-    FIM             reduce using rule 35 (senao_opcional -> SENAO : lista_declaracoes .)
-    VAR_ID          shift and go to state 9
-    FUNCAO          shift and go to state 12
-    SE              shift and go to state 14
-    ESCREVER        shift and go to state 15
-    COMENTARIO      shift and go to state 16
-    (               shift and go to state 13
-    -               shift and go to state 17
-    NUM             shift and go to state 18
-    STRING          shift and go to state 19
-
-    declaracao                     shift and go to state 20
-    declaracao_atribuicao          shift and go to state 3
-    declaracao_expressao           shift and go to state 4
-    declaracao_funcao              shift and go to state 5
-    declaracao_se                  shift and go to state 6
-    declaracao_escrever            shift and go to state 7
-    declaracao_comentario          shift and go to state 8
-    atribuicao                     shift and go to state 10
-    expressao                      shift and go to state 11
-
-state 79
-
-    (28) declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .
-
-    VAR_ID          reduce using rule 28 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
-    FUNCAO          reduce using rule 28 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
-    SE              reduce using rule 28 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
-    ESCREVER        reduce using rule 28 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
-    COMENTARIO      reduce using rule 28 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
-    (               reduce using rule 28 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
-    -               reduce using rule 28 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
-    NUM             reduce using rule 28 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
-    STRING          reduce using rule 28 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
-    $end            reduce using rule 28 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
-    SENAO           reduce using rule 28 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
-    FIM             reduce using rule 28 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
+    +               shift and go to state 28
+    -               shift and go to state 29
+    *               shift and go to state 30
+    /               shift and go to state 31
+    CONCAT          shift and go to state 32
 
 
 state 80
 
-    (29) declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao . ;
-    (18) expressao -> expressao . + expressao
-    (19) expressao -> expressao . - expressao
-    (20) expressao -> expressao . * expressao
-    (21) expressao -> expressao . / expressao
-    (40) expressao -> expressao . CONCAT expressao
+    (34) declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) . : bloco_funcao FIM
+    (35) declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) . , : expressao ;
 
-    ;               shift and go to state 81
-    +               shift and go to state 25
-    -               shift and go to state 26
-    *               shift and go to state 27
-    /               shift and go to state 28
-    CONCAT          shift and go to state 29
+    :               shift and go to state 88
+    ,               shift and go to state 89
 
 
 state 81
 
-    (29) declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .
+    (38) lista_parametros -> lista_parametros , . VAR_ID
+    (39) lista_parametros -> lista_parametros , . NUM
 
-    VAR_ID          reduce using rule 29 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
-    FUNCAO          reduce using rule 29 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
-    SE              reduce using rule 29 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
-    ESCREVER        reduce using rule 29 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
-    COMENTARIO      reduce using rule 29 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
-    (               reduce using rule 29 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
-    -               reduce using rule 29 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
-    NUM             reduce using rule 29 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
-    STRING          reduce using rule 29 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
-    $end            reduce using rule 29 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
-    SENAO           reduce using rule 29 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
-    FIM             reduce using rule 29 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
+    VAR_ID          shift and go to state 90
+    NUM             shift and go to state 91
+
+
+state 82
+
+    (42) declaracao_se -> SE expressao : lista_declaracoes senao_opcional . FIM
+
+    FIM             shift and go to state 92
+
+
+state 83
+
+    (43) senao_opcional -> SENAO . : lista_declaracoes
+
+    :               shift and go to state 93
+
+
+state 84
+
+    (44) senao_opcional -> vazio .
+
+    FIM             reduce using rule 44 (senao_opcional -> vazio .)
+
+
+state 85
+
+    (45) declaracao_escrever -> ESCREVER ( expressao ) ; .
+
+    VAR_ID          reduce using rule 45 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
+    FUNCAO          reduce using rule 45 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
+    SE              reduce using rule 45 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
+    ESCREVER        reduce using rule 45 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
+    COMENTARIO      reduce using rule 45 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
+    (               reduce using rule 45 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
+    -               reduce using rule 45 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
+    NUM             reduce using rule 45 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
+    STRING          reduce using rule 45 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
+    [               reduce using rule 45 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
+    MAP             reduce using rule 45 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
+    FOLD            reduce using rule 45 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
+    $end            reduce using rule 45 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
+    SENAO           reduce using rule 45 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
+    FIM             reduce using rule 45 (declaracao_escrever -> ESCREVER ( expressao ) ; .)
+
+
+state 86
+
+    (31) expressao -> MAP ( VAR_ID , lista_expressoes . )
+    (15) lista_expressoes -> lista_expressoes . , expressao
+
+    )               shift and go to state 94
+    ,               shift and go to state 66
+
+
+state 87
+
+    (32) expressao -> FOLD ( VAR_ID , lista_expressoes . , expressao )
+    (15) lista_expressoes -> lista_expressoes . , expressao
+
+    ,               shift and go to state 95
+
+
+state 88
+
+    (34) declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : . bloco_funcao FIM
+    (49) bloco_funcao -> . lista_declaracoes
+    (1) lista_declaracoes -> . declaracao
+    (2) lista_declaracoes -> . lista_declaracoes declaracao
+    (3) declaracao -> . declaracao_atribuicao
+    (4) declaracao -> . declaracao_expressao
+    (5) declaracao -> . declaracao_funcao
+    (6) declaracao -> . declaracao_se
+    (7) declaracao -> . declaracao_escrever
+    (8) declaracao -> . declaracao_comentario
+    (9) declaracao_atribuicao -> . VAR_ID = lista_expressoes ;
+    (10) declaracao_atribuicao -> . atribuicao
+    (11) declaracao_atribuicao -> . declaracao_atribuicao , atribuicao ;
+    (17) declaracao_expressao -> . expressao ;
+    (34) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM
+    (35) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ;
+    (42) declaracao_se -> . SE expressao : lista_declaracoes senao_opcional FIM
+    (45) declaracao_escrever -> . ESCREVER ( expressao ) ;
+    (46) declaracao_comentario -> . COMENTARIO
+    (12) atribuicao -> . VAR_ID = expressao
+    (18) expressao -> . expressao + expressao
+    (19) expressao -> . expressao - expressao
+    (20) expressao -> . expressao * expressao
+    (21) expressao -> . expressao / expressao
+    (22) expressao -> . ( expressao )
+    (23) expressao -> . - expressao
+    (24) expressao -> . NUM
+    (25) expressao -> . STRING
+    (26) expressao -> . VAR_ID
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
+
+    VAR_ID          shift and go to state 9
+    FUNCAO          shift and go to state 12
+    SE              shift and go to state 14
+    ESCREVER        shift and go to state 15
+    COMENTARIO      shift and go to state 16
+    (               shift and go to state 13
+    -               shift and go to state 17
+    NUM             shift and go to state 18
+    STRING          shift and go to state 19
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
+
+    bloco_funcao                   shift and go to state 96
+    lista_declaracoes              shift and go to state 97
+    declaracao                     shift and go to state 2
+    declaracao_atribuicao          shift and go to state 3
+    declaracao_expressao           shift and go to state 4
+    declaracao_funcao              shift and go to state 5
+    declaracao_se                  shift and go to state 6
+    declaracao_escrever            shift and go to state 7
+    declaracao_comentario          shift and go to state 8
+    atribuicao                     shift and go to state 10
+    expressao                      shift and go to state 11
+
+state 89
+
+    (35) declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , . : expressao ;
+
+    :               shift and go to state 98
+
+
+state 90
+
+    (38) lista_parametros -> lista_parametros , VAR_ID .
+
+    ,               reduce using rule 38 (lista_parametros -> lista_parametros , VAR_ID .)
+    )               reduce using rule 38 (lista_parametros -> lista_parametros , VAR_ID .)
+
+
+state 91
+
+    (39) lista_parametros -> lista_parametros , NUM .
+
+    ,               reduce using rule 39 (lista_parametros -> lista_parametros , NUM .)
+    )               reduce using rule 39 (lista_parametros -> lista_parametros , NUM .)
+
+
+state 92
+
+    (42) declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .
+
+    VAR_ID          reduce using rule 42 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
+    FUNCAO          reduce using rule 42 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
+    SE              reduce using rule 42 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
+    ESCREVER        reduce using rule 42 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
+    COMENTARIO      reduce using rule 42 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
+    (               reduce using rule 42 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
+    -               reduce using rule 42 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
+    NUM             reduce using rule 42 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
+    STRING          reduce using rule 42 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
+    [               reduce using rule 42 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
+    MAP             reduce using rule 42 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
+    FOLD            reduce using rule 42 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
+    $end            reduce using rule 42 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
+    SENAO           reduce using rule 42 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
+    FIM             reduce using rule 42 (declaracao_se -> SE expressao : lista_declaracoes senao_opcional FIM .)
+
+
+state 93
+
+    (43) senao_opcional -> SENAO : . lista_declaracoes
+    (1) lista_declaracoes -> . declaracao
+    (2) lista_declaracoes -> . lista_declaracoes declaracao
+    (3) declaracao -> . declaracao_atribuicao
+    (4) declaracao -> . declaracao_expressao
+    (5) declaracao -> . declaracao_funcao
+    (6) declaracao -> . declaracao_se
+    (7) declaracao -> . declaracao_escrever
+    (8) declaracao -> . declaracao_comentario
+    (9) declaracao_atribuicao -> . VAR_ID = lista_expressoes ;
+    (10) declaracao_atribuicao -> . atribuicao
+    (11) declaracao_atribuicao -> . declaracao_atribuicao , atribuicao ;
+    (17) declaracao_expressao -> . expressao ;
+    (34) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM
+    (35) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ;
+    (42) declaracao_se -> . SE expressao : lista_declaracoes senao_opcional FIM
+    (45) declaracao_escrever -> . ESCREVER ( expressao ) ;
+    (46) declaracao_comentario -> . COMENTARIO
+    (12) atribuicao -> . VAR_ID = expressao
+    (18) expressao -> . expressao + expressao
+    (19) expressao -> . expressao - expressao
+    (20) expressao -> . expressao * expressao
+    (21) expressao -> . expressao / expressao
+    (22) expressao -> . ( expressao )
+    (23) expressao -> . - expressao
+    (24) expressao -> . NUM
+    (25) expressao -> . STRING
+    (26) expressao -> . VAR_ID
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
+
+    VAR_ID          shift and go to state 9
+    FUNCAO          shift and go to state 12
+    SE              shift and go to state 14
+    ESCREVER        shift and go to state 15
+    COMENTARIO      shift and go to state 16
+    (               shift and go to state 13
+    -               shift and go to state 17
+    NUM             shift and go to state 18
+    STRING          shift and go to state 19
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
+
+    lista_declaracoes              shift and go to state 99
+    declaracao                     shift and go to state 2
+    declaracao_atribuicao          shift and go to state 3
+    declaracao_expressao           shift and go to state 4
+    declaracao_funcao              shift and go to state 5
+    declaracao_se                  shift and go to state 6
+    declaracao_escrever            shift and go to state 7
+    declaracao_comentario          shift and go to state 8
+    atribuicao                     shift and go to state 10
+    expressao                      shift and go to state 11
+
+state 94
+
+    (31) expressao -> MAP ( VAR_ID , lista_expressoes ) .
+
+    ;               reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    +               reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    -               reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    *               reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    /               reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    CONCAT          reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    )               reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    :               reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    ]               reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    ,               reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    VAR_ID          reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    FUNCAO          reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    SE              reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    ESCREVER        reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    COMENTARIO      reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    (               reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    NUM             reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    STRING          reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    [               reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    MAP             reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    FOLD            reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    $end            reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    SENAO           reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+    FIM             reduce using rule 31 (expressao -> MAP ( VAR_ID , lista_expressoes ) .)
+
+
+state 95
+
+    (32) expressao -> FOLD ( VAR_ID , lista_expressoes , . expressao )
+    (15) lista_expressoes -> lista_expressoes , . expressao
+    (18) expressao -> . expressao + expressao
+    (19) expressao -> . expressao - expressao
+    (20) expressao -> . expressao * expressao
+    (21) expressao -> . expressao / expressao
+    (22) expressao -> . ( expressao )
+    (23) expressao -> . - expressao
+    (24) expressao -> . NUM
+    (25) expressao -> . STRING
+    (26) expressao -> . VAR_ID
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
+
+    (               shift and go to state 13
+    -               shift and go to state 17
+    NUM             shift and go to state 18
+    STRING          shift and go to state 19
+    VAR_ID          shift and go to state 35
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
+
+    expressao                      shift and go to state 100
+
+state 96
+
+    (34) declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao . FIM
+
+    FIM             shift and go to state 101
+
+
+state 97
+
+    (49) bloco_funcao -> lista_declaracoes .
+    (2) lista_declaracoes -> lista_declaracoes . declaracao
+    (3) declaracao -> . declaracao_atribuicao
+    (4) declaracao -> . declaracao_expressao
+    (5) declaracao -> . declaracao_funcao
+    (6) declaracao -> . declaracao_se
+    (7) declaracao -> . declaracao_escrever
+    (8) declaracao -> . declaracao_comentario
+    (9) declaracao_atribuicao -> . VAR_ID = lista_expressoes ;
+    (10) declaracao_atribuicao -> . atribuicao
+    (11) declaracao_atribuicao -> . declaracao_atribuicao , atribuicao ;
+    (17) declaracao_expressao -> . expressao ;
+    (34) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM
+    (35) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ;
+    (42) declaracao_se -> . SE expressao : lista_declaracoes senao_opcional FIM
+    (45) declaracao_escrever -> . ESCREVER ( expressao ) ;
+    (46) declaracao_comentario -> . COMENTARIO
+    (12) atribuicao -> . VAR_ID = expressao
+    (18) expressao -> . expressao + expressao
+    (19) expressao -> . expressao - expressao
+    (20) expressao -> . expressao * expressao
+    (21) expressao -> . expressao / expressao
+    (22) expressao -> . ( expressao )
+    (23) expressao -> . - expressao
+    (24) expressao -> . NUM
+    (25) expressao -> . STRING
+    (26) expressao -> . VAR_ID
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
+
+    FIM             reduce using rule 49 (bloco_funcao -> lista_declaracoes .)
+    VAR_ID          shift and go to state 9
+    FUNCAO          shift and go to state 12
+    SE              shift and go to state 14
+    ESCREVER        shift and go to state 15
+    COMENTARIO      shift and go to state 16
+    (               shift and go to state 13
+    -               shift and go to state 17
+    NUM             shift and go to state 18
+    STRING          shift and go to state 19
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
+
+    declaracao                     shift and go to state 23
+    declaracao_atribuicao          shift and go to state 3
+    declaracao_expressao           shift and go to state 4
+    declaracao_funcao              shift and go to state 5
+    declaracao_se                  shift and go to state 6
+    declaracao_escrever            shift and go to state 7
+    declaracao_comentario          shift and go to state 8
+    atribuicao                     shift and go to state 10
+    expressao                      shift and go to state 11
+
+state 98
+
+    (35) declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : . expressao ;
+    (18) expressao -> . expressao + expressao
+    (19) expressao -> . expressao - expressao
+    (20) expressao -> . expressao * expressao
+    (21) expressao -> . expressao / expressao
+    (22) expressao -> . ( expressao )
+    (23) expressao -> . - expressao
+    (24) expressao -> . NUM
+    (25) expressao -> . STRING
+    (26) expressao -> . VAR_ID
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
+
+    (               shift and go to state 13
+    -               shift and go to state 17
+    NUM             shift and go to state 18
+    STRING          shift and go to state 19
+    VAR_ID          shift and go to state 35
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
+
+    expressao                      shift and go to state 102
+
+state 99
+
+    (43) senao_opcional -> SENAO : lista_declaracoes .
+    (2) lista_declaracoes -> lista_declaracoes . declaracao
+    (3) declaracao -> . declaracao_atribuicao
+    (4) declaracao -> . declaracao_expressao
+    (5) declaracao -> . declaracao_funcao
+    (6) declaracao -> . declaracao_se
+    (7) declaracao -> . declaracao_escrever
+    (8) declaracao -> . declaracao_comentario
+    (9) declaracao_atribuicao -> . VAR_ID = lista_expressoes ;
+    (10) declaracao_atribuicao -> . atribuicao
+    (11) declaracao_atribuicao -> . declaracao_atribuicao , atribuicao ;
+    (17) declaracao_expressao -> . expressao ;
+    (34) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM
+    (35) declaracao_funcao -> . FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ;
+    (42) declaracao_se -> . SE expressao : lista_declaracoes senao_opcional FIM
+    (45) declaracao_escrever -> . ESCREVER ( expressao ) ;
+    (46) declaracao_comentario -> . COMENTARIO
+    (12) atribuicao -> . VAR_ID = expressao
+    (18) expressao -> . expressao + expressao
+    (19) expressao -> . expressao - expressao
+    (20) expressao -> . expressao * expressao
+    (21) expressao -> . expressao / expressao
+    (22) expressao -> . ( expressao )
+    (23) expressao -> . - expressao
+    (24) expressao -> . NUM
+    (25) expressao -> . STRING
+    (26) expressao -> . VAR_ID
+    (27) expressao -> . [ lista_elementos ]
+    (31) expressao -> . MAP ( VAR_ID , lista_expressoes )
+    (32) expressao -> . FOLD ( VAR_ID , lista_expressoes , expressao )
+    (33) expressao -> . VAR_ID ( lista_expressoes )
+    (48) expressao -> . expressao CONCAT expressao
+
+    FIM             reduce using rule 43 (senao_opcional -> SENAO : lista_declaracoes .)
+    VAR_ID          shift and go to state 9
+    FUNCAO          shift and go to state 12
+    SE              shift and go to state 14
+    ESCREVER        shift and go to state 15
+    COMENTARIO      shift and go to state 16
+    (               shift and go to state 13
+    -               shift and go to state 17
+    NUM             shift and go to state 18
+    STRING          shift and go to state 19
+    [               shift and go to state 20
+    MAP             shift and go to state 21
+    FOLD            shift and go to state 22
+
+    declaracao                     shift and go to state 23
+    declaracao_atribuicao          shift and go to state 3
+    declaracao_expressao           shift and go to state 4
+    declaracao_funcao              shift and go to state 5
+    declaracao_se                  shift and go to state 6
+    declaracao_escrever            shift and go to state 7
+    declaracao_comentario          shift and go to state 8
+    atribuicao                     shift and go to state 10
+    expressao                      shift and go to state 11
+
+state 100
+
+    (32) expressao -> FOLD ( VAR_ID , lista_expressoes , expressao . )
+    (15) lista_expressoes -> lista_expressoes , expressao .
+    (18) expressao -> expressao . + expressao
+    (19) expressao -> expressao . - expressao
+    (20) expressao -> expressao . * expressao
+    (21) expressao -> expressao . / expressao
+    (48) expressao -> expressao . CONCAT expressao
+
+    )               shift and go to state 103
+    ,               reduce using rule 15 (lista_expressoes -> lista_expressoes , expressao .)
+    +               shift and go to state 28
+    -               shift and go to state 29
+    *               shift and go to state 30
+    /               shift and go to state 31
+    CONCAT          shift and go to state 32
+
+
+state 101
+
+    (34) declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .
+
+    VAR_ID          reduce using rule 34 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
+    FUNCAO          reduce using rule 34 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
+    SE              reduce using rule 34 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
+    ESCREVER        reduce using rule 34 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
+    COMENTARIO      reduce using rule 34 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
+    (               reduce using rule 34 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
+    -               reduce using rule 34 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
+    NUM             reduce using rule 34 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
+    STRING          reduce using rule 34 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
+    [               reduce using rule 34 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
+    MAP             reduce using rule 34 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
+    FOLD            reduce using rule 34 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
+    $end            reduce using rule 34 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
+    SENAO           reduce using rule 34 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
+    FIM             reduce using rule 34 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) : bloco_funcao FIM .)
+
+
+state 102
+
+    (35) declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao . ;
+    (18) expressao -> expressao . + expressao
+    (19) expressao -> expressao . - expressao
+    (20) expressao -> expressao . * expressao
+    (21) expressao -> expressao . / expressao
+    (48) expressao -> expressao . CONCAT expressao
+
+    ;               shift and go to state 104
+    +               shift and go to state 28
+    -               shift and go to state 29
+    *               shift and go to state 30
+    /               shift and go to state 31
+    CONCAT          shift and go to state 32
+
+
+state 103
+
+    (32) expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .
+
+    ;               reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    +               reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    -               reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    *               reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    /               reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    CONCAT          reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    )               reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    :               reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    ]               reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    ,               reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    VAR_ID          reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    FUNCAO          reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    SE              reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    ESCREVER        reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    COMENTARIO      reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    (               reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    NUM             reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    STRING          reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    [               reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    MAP             reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    FOLD            reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    $end            reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    SENAO           reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+    FIM             reduce using rule 32 (expressao -> FOLD ( VAR_ID , lista_expressoes , expressao ) .)
+
+
+state 104
+
+    (35) declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .
+
+    VAR_ID          reduce using rule 35 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
+    FUNCAO          reduce using rule 35 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
+    SE              reduce using rule 35 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
+    ESCREVER        reduce using rule 35 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
+    COMENTARIO      reduce using rule 35 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
+    (               reduce using rule 35 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
+    -               reduce using rule 35 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
+    NUM             reduce using rule 35 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
+    STRING          reduce using rule 35 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
+    [               reduce using rule 35 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
+    MAP             reduce using rule 35 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
+    FOLD            reduce using rule 35 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
+    $end            reduce using rule 35 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
+    SENAO           reduce using rule 35 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
+    FIM             reduce using rule 35 (declaracao_funcao -> FUNCAO VAR_ID ( lista_parametros_opcional ) , : expressao ; .)
 
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for ( in state 32 resolved as shift
-WARNING: shift/reduce conflict for - in state 39 resolved as shift
-WARNING: shift/reduce conflict for + in state 46 resolved as shift
-WARNING: shift/reduce conflict for - in state 46 resolved as shift
-WARNING: shift/reduce conflict for * in state 46 resolved as shift
-WARNING: shift/reduce conflict for / in state 46 resolved as shift
-WARNING: shift/reduce conflict for CONCAT in state 46 resolved as shift
-WARNING: reduce/reduce conflict in state 39 resolved using rule (atribuicao -> VAR_ID = expressao)
-WARNING: rejected rule (lista_expressoes -> expressao) in state 39
+WARNING: shift/reduce conflict for ( in state 35 resolved as shift
+WARNING: shift/reduce conflict for - in state 47 resolved as shift
+WARNING: shift/reduce conflict for + in state 54 resolved as shift
+WARNING: shift/reduce conflict for - in state 54 resolved as shift
+WARNING: shift/reduce conflict for * in state 54 resolved as shift
+WARNING: shift/reduce conflict for / in state 54 resolved as shift
+WARNING: shift/reduce conflict for CONCAT in state 54 resolved as shift
+WARNING: reduce/reduce conflict in state 47 resolved using rule (atribuicao -> VAR_ID = expressao)
+WARNING: rejected rule (lista_expressoes -> expressao) in state 47

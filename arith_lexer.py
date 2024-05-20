@@ -86,8 +86,8 @@ class ArithLexer:
     #Reconhecedor de COMENTARIO
     def t_COMENTARIO(self, t):
         # Reconhece comentários de uma linha iniciados por '--'
-        # Reconhece comentários multilinha delimitados por '{--' e '--}'
-        r"(--[^\n]*|{--.*?--})"
+        # Reconhece comentários multilinha delimitados por '{--' e '--}', foi adicionado o [\s\S] para incluir quebras de linha
+        r"(--[^\n]*|{-[\s\S]*?-})"
         return t
 
     #Reconhecedor de SE

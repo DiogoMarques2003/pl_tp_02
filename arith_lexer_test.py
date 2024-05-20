@@ -83,3 +83,12 @@ while True:
     if not tk:
         break
     print(tk, end="")
+
+print("\n-------\n")
+al.input("""ESCREVER ("Olá, #{escola} teste #{inst}!");""")
+
+while True:
+    tk = al.token()
+    if not tk:
+        break
+    print(tk, end="")
