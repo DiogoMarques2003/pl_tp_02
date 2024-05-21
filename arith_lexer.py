@@ -11,6 +11,7 @@ class ArithLexer:
         "VAR_ID",  # identificador de variável ou função
         "COMENTARIO",  # identificador de um comentario
         "SE",  # identificador de uma confição if
+        "FIMSE",  # identificador de finalização da condição do SE
         "SENAO",  # identificador de uma condição else
         "NEG",  # Negação da condição do if
         "ENTRADA",  # Identificador para input de dados
@@ -55,7 +56,8 @@ class ArithLexer:
 
     # Reconhecer a Palavra ESC ou ESCREVER
     def t_ESCREVER(self, t):
-        r"ESC(REVER)?"
+        # \b -> limite de palavra, garante que é exatamente o que está no regex
+        r"[Ee][Ss][Cc]([Rr][Ee][Vv][Ee][Rr])?\b"
         return t
 
     # Reconhecer uma variavel e função
@@ -68,12 +70,17 @@ class ArithLexer:
 
     # Reconhecedor de FIM
     def t_FIM(self, t):
-        r"FIM"
+        r"[Ff][Ii][Mm]"
+        return t
+
+    # Reconhecedor de FIMSE
+    def t_FIMSE(self, t):
+        r"[Ff][Ii][Mm][Ss][Ee]"
         return t
 
     # Reconhecedor de FUNCAO
     def t_FUNCAO(self, t):
-        r"FUNCAO"
+        r"[Ff][Uu][Nn][Cc][Aa][Oo]"
         return t
 
     # Reconhecedor de uma string
@@ -92,32 +99,33 @@ class ArithLexer:
 
     #Reconhecedor de SE
     def t_SE(self, t):
-        r"SE"
+        r"[Ss][Ee]"
         return t
 
     #Reconhecedor de SENAO
     def t_SENAO(self, t):
-        r"SENAO"
+        r"[Ss][Ee][Nn][Aa][Oo]"
         return t
 
     #Reconhecedor de NEG (negação da condição)
     def t_NEG(self, t):
-        r"NEG"
+        r"[Nn][Ee][Gg]"
         return t
 
     #Reconhecedor de ENTRADA
     def t_ENTRADA(self, t):
-        r"ENT(RADA)?"
+        # \b -> limite de palavra, garante que é exatamente o que está no regex
+        r"[Ee][Nn][Tt]([Rr][Aa][Dd][Aa])?\b"
         return t
 
     #Reconhecedor de MAP
     def t_MAP(self, t):
-        r"MAP"
+        r"[Mm][Aa][Pp]"
         return t
 
     #Reconhecedor de FOLD
     def t_FOLD(self, t):
-        r"FOLD"
+        r"[Ff][Oo][Ll][Dd]"
         return t
 
     #Reconhecedor de CONCAT
