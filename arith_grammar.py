@@ -195,7 +195,7 @@ class ArithGrammar:
         """declaracao_funcao : FUNCAO VAR_ID '(' lista_parametros_opcional ')' ':' bloco_funcao FIM
                              | FUNCAO VAR_ID '(' lista_parametros_opcional ')' ',' ':' expressao ';'"""
         if len(p) == 10:
-            # Esta é a forma concisa da função: FUNCAO nome (parametros) ,: expressao;
+            # Esta é a forma da função: FUNCAO nome (parametros) ,: expressao;
             p[0] = {'op': 'funcao', 'args': [p[2], p[4], p[8]]}  # Captura a expressão em p[8]
         else:
             p[0] = {'op': 'funcao', 'args': [p[2], p[4], p[7]]}
