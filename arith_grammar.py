@@ -153,10 +153,20 @@ class ArithGrammar:
         """expressao : VAR_ID"""
         p[0] = {'var': p[1]}
 
-    # Variável
+    # Array
+    def p_expressao_var_array(self, p):
+        """expressao : VAR_ID '[' ']'"""
+        p[0] = {'array': p[1]}
+
+    # Elementos array
     def p_expressao_array(self, p):
         """expressao : '[' lista_elementos  ']' """
-        p[0] = {'array': p[2]}
+        p[0] = {'elementos_array': p[2]}
+
+    # array init
+    def p_expressao_array_init(self, p):
+        """declaracao_atribuicao : VAR_ID '[' ']' '=' '[' lista_elementos ']' ';'"""
+        p[0] = {'op': 'array_init', 'args': [p[1], p[6]]}
 
     # Regra para lidar com a lista de elementos dentro dos colchetes
     def p_lista_elementos(self, p):
@@ -210,13 +220,28 @@ class ArithGrammar:
     def p_lista_parametros(self, p):
         """lista_parametros : lista_parametros ',' VAR_ID
                             | lista_parametros ',' NUM
+                            | lista_parametros ',' array_vazio
+                            | lista_parametros ',' var_array
                             | VAR_ID
-                            | NUM"""
+                            | NUM
+                            | array_vazio
+                            | var_array"""
         if len(p) == 2:
             p[0] = [p[1]]  # Inicia uma nova lista com o primeiro parâmetro
         else:
             p[1].append(p[3])  # Adiciona à lista existente
             p[0] = p[1]
+
+    # Array vazio
+    def p_empty_list(self, p):
+        """array_vazio : '[' ']'"""
+        p[0] = []
+
+    # VAR_ID:ARRAY
+    def p_var_array(self, p):
+        """var_array : VAR_ID ':' VAR_ID '[' ']' """
+
+        p[0] = {'op': 'var_array', 'args': [p[1], p[3]]}
 
     # Declaração condicional 'se' com opcional 'senão'
     def p_declaracao_se(self, p):
