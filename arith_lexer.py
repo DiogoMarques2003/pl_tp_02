@@ -11,8 +11,8 @@ class ArithLexer:
         "VAR_ID",  # identificador de variável ou função
         "COMENTARIO",  # identificador de um comentario
         "SE",  # identificador de uma confição if
-        "FIMSE",  # identificador de finalização da condição do SE
         "SENAO",  # identificador de uma condição else
+        "SENAOSE",  # Identificador do senão se
         "NEG",  # Negação da condição do if
         "ENTRADA",  # Identificador para input de dados
         "MAP",  # Identificador para a função MAP
@@ -35,6 +35,7 @@ class ArithLexer:
         ',',  # vírgula
         ';',  # ponto-e-vírgula
         ':',  # dois pontos
+        '!',  # Diferente
     ]
 
     # Ignorar espacos
@@ -73,11 +74,6 @@ class ArithLexer:
         r"[Ff][Ii][Mm]"
         return t
 
-    # Reconhecedor de FIMSE
-    def t_FIMSE(self, t):
-        r"[Ff][Ii][Mm][Ss][Ee]"
-        return t
-
     # Reconhecedor de FUNCAO
     def t_FUNCAO(self, t):
         r"[Ff][Uu][Nn][Cc][Aa][Oo]"
@@ -99,12 +95,17 @@ class ArithLexer:
 
     #Reconhecedor de SE
     def t_SE(self, t):
-        r"[Ss][Ee]"
+        r"[Ss][Ee]\b"
         return t
 
     #Reconhecedor de SENAO
     def t_SENAO(self, t):
-        r"[Ss][Ee][Nn][Aa][Oo]"
+        r"[Ss][Ee][Nn][Aa][Oo]\b"
+        return t
+
+    #Reconhecedor de SENAOSE
+    def t_SENAOSE(self, t):
+        r"[Ss][Ee][Nn][Aa][Oo][Ss][Ee]\b"
         return t
 
     #Reconhecedor de NEG (negação da condição)

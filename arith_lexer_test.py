@@ -92,3 +92,12 @@ while True:
     if not tk:
         break
     print(tk, end="")
+
+print("\n-------\n")
+al.input("""SE var1 == var2: \nESCREVER(\"OLA\");\nSENAOSE var1 != var2:\nESCREVER(\"OLA2\");\nFIM""")
+
+while True:
+    tk = al.token()
+    if not tk:
+        break
+    print(tk, end="")

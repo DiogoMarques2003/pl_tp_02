@@ -9,7 +9,7 @@ class ArithGrammar:
     precedence = (
         ('left', '+', '-'),  # Operadores de adição e subtração com associatividade à esquerda
         ('left', '*', '/'),  # Operadores de multiplicação e divisão com associatividade à esquerda
-        ('right', 'UMINUS'),  # Menos unário com associatividade à direita
+        ('right', 'UMINUS', 'UNARY_NEG'),  # Operadores unários como '-' (negativo) e 'NEG' têm associatividade à direita
     )
 
     # Constructor
@@ -109,8 +109,18 @@ class ArithGrammar:
         """expressao : expressao '+' expressao
                      | expressao '-' expressao
                      | expressao '*' expressao
-                     | expressao '/' expressao"""
-        p[0] = {'op': p[2], 'args': [p[1], p[3]]}  # Cria objeto para a operação
+                     | expressao '/' expressao
+                     | expressao '=' '=' expressao
+                     | expressao '<' expressao
+                     | expressao '>' expressao
+                     | expressao '<' '=' expressao
+                     | expressao '>' '=' expressao
+                     | expressao '!' '=' expressao"""
+
+        if len(p) == 4:
+            p[0] = {'op': p[2], 'args': [p[1], p[3]]}  # Cria objeto para a operação
+        else:
+            p[0] = {'op': ''.join([p[2], p[3]]), 'args': [p[1], p[4]]} # Para expressões onde tenhem mais que um operador
 
     # Expressões entre parênteses
     def p_expressao_grupo(self, p):
@@ -245,14 +255,26 @@ class ArithGrammar:
 
     # Declaração condicional 'se' com opcional 'senão'
     def p_declaracao_se(self, p):
-        """declaracao_se : SE expressao ':' lista_declaracoes senao_opcional FIM"""
+        """declaracao_se : SE expressao ':' lista_declaracoes senao FIM"""
         p[0] = {'op': 'se', 'args': [p[2], p[4], p[5]]}
 
-    # Parte opcional 'senão' para a declaração condicional
+    # Parte opcional 'senao' e 'senaose' para a declaração condicional
     def p_senao_opcional(self, p):
-        """senao_opcional : SENAO ':' lista_declaracoes
-                          | vazio"""
-        p[0] = p[1]
+        """senao : SENAO ':' lista_declaracoes
+                 | SENAOSE expressao ':' lista_declaracoes
+                 | vazio"""
+
+        if len(p) == 4:
+            p[0] = {'op': 'senao', 'args': p[3]}
+        elif len(p) == 5:
+            p[0] = {'op': 'senao_se', 'args': [p[2], p[4]]}
+        else:
+            p[0] = {'op': 'senao', 'args': []}
+
+    # Negação da espreção das condições 'se' e 'senaose'
+    def p_expressao_negacao(self, p):
+        """expressao : NEG expressao %prec UNARY_NEG"""
+        p[0] = {'op': 'neg', 'args': [p[2]]}
 
     # Declaração para escrita (output)
     def p_declaracao_escrever(self, p):
