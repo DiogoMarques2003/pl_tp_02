@@ -1,16 +1,29 @@
-# This is a sample Python script.
+from arith_grammar import ArithGrammar
+from arith_eval import ArithEval
+import sys
+from pprint import PrettyPrinter
+pp = PrettyPrinter(sort_dicts=False)
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+ag = ArithGrammar()
+ag.build()
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+if len(sys.argv) == 2:
+    with open(sys.argv[1], "r") as file:
+        contents = file.read()
+        try:
+            ast = ag.parse(contents)
+            pp.pprint(ast)
+            ArithEval.evaluate(ast)    
+        except Exception as e:
+            print(e, file=sys.stderr)
+else:
+    for expr in iter(lambda: input(">> "), ""):
+        try:
+            ast = ag.parse(expr)
+            pp.pprint(ast)
+            res = ArithEval.evaluate(ast)
+            if res is not None:
+                print(f"<< {res}")
+        except Exception as e:
+            print(e)

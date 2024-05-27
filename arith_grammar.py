@@ -57,8 +57,6 @@ class ArithGrammar:
         """declaracao_atribuicao : VAR_ID '=' lista_expressoes ';'"""
         p[0] = {'op': 'atribuicao', 'args': [p[1], p[3]]}
 
-        # Redefinindo a regra para múltiplas atribuições na mesma linha
-
     # Multi declaração com/sem atribuição
     def p_declaracao_atribuicao_multipla(self, p):
         """declaracao_atribuicao : atribuicao
@@ -222,7 +220,7 @@ class ArithGrammar:
 
     # Declaração de funções
     def p_declaracao_funcao(self, p):
-        """declaracao_funcao : FUNCAO VAR_ID '(' lista_parametros_opcional ')' ':' bloco_funcao FIM
+        """declaracao_funcao : FUNCAO VAR_ID '(' lista_parametros_opcional ')' ':'   FIM
                              | FUNCAO VAR_ID '(' lista_parametros_opcional ')' ',' ':' expressao ';'"""
         if len(p) == 10:
             # Esta é a forma da função: FUNCAO nome (parametros) ,: expressao;
