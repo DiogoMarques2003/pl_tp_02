@@ -202,6 +202,16 @@ class ArithGrammar:
         """expressao : FOLD '(' VAR_ID ',' lista_expressoes ',' expressao ')'"""
         p[0] = {'op': 'fold', 'args': [p[3], p[5], p[7]]}
 
+    # Função de entrada de valores
+    def p_expressao_entrada(self, p):
+        """expressao : ENTRADA '(' ')'"""
+        p[0] = {'op': 'entrada'}
+
+    # Função para gerar um número aleatorio
+    def p_expressao_aleatorio(self, p):
+        """expressao : ALEATORIO '(' NUM ')'"""
+        p[0] = {'op': 'aleatorio', 'args': [p[3]]}
+
     #Chamar funções
     def p_expressao_chamada_funcao(self, p):
         """expressao : VAR_ID '(' lista_expressoes ')'"""

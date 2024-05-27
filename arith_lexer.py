@@ -7,7 +7,7 @@ class ArithLexer:
         "STRING",  # string delimitada por aspas duplas
         "FIM",  # atribuicao para o "FIM" das funções
         "FUNCAO",  # identificador de uma função
-        "ESCREVER",  # identificador
+        "ESCREVER",  # Escrever dados
         "VAR_ID",  # identificador de variável ou função
         "COMENTARIO",  # identificador de um comentario
         "SE",  # identificador de uma confição if
@@ -15,9 +15,10 @@ class ArithLexer:
         "SENAOSE",  # Identificador do senão se
         "NEG",  # Negação da condição do if
         "ENTRADA",  # Identificador para input de dados
+        "ALEATORIO",  # Identificador de gerado de um numero aleatorio
         "MAP",  # Identificador para a função MAP
         "FOLD",  # Identificador para a função FOLD
-        "CONCAT",  #Identificador de concatnação
+        "CONCAT",  # Identificador de concatnação
     )
 
     literals = [
@@ -89,7 +90,7 @@ class ArithLexer:
     #Reconhecedor de COMENTARIO
     def t_COMENTARIO(self, t):
         # Reconhece comentários de uma linha iniciados por '--'
-        # Reconhece comentários multilinha delimitados por '{--' e '--}', foi adicionado o [\s\S] para incluir quebras de linha
+        # Reconhece comentários multilinha delimitados por '{-' e '-}', foi adicionado o [\s\S] para incluir quebras de linha
         r"(--[^\n]*|{-[\s\S]*?-})"
         return t
 
@@ -131,7 +132,12 @@ class ArithLexer:
 
     #Reconhecedor de CONCAT
     def t_CONCAT(self, t):
-        r'<>'
+        r"<>"
+        return t
+
+    #Reconhecedor de ALEATORIO
+    def t_ALEATORIO(self, t):
+        r"[Aa][Ll][Ee][Aa][Tt][Oo][Rr][Ii][Oo]"
         return t
 
     # cria o lexer

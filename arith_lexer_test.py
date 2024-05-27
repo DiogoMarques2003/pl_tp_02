@@ -101,3 +101,13 @@ while True:
     if not tk:
         break
     print(tk, end="")
+
+print("\n-------\n")
+al.input("""valor = ENTRADA();\nate10 = ALEATORIO(10);""")
+
+while True:
+    tk = al.token()
+    if not tk:
+        break
+    print(tk, end="")
+

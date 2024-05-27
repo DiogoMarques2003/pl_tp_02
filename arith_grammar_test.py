@@ -27,6 +27,8 @@ exemplos = [ # exemplos a avaliar de forma independente...
             "SE var1 == var2: \nESCREVER(\"OLA\");\nFIM",
             "SE NEG var1 == var2: \nESCREVER(\"OLA\");\nSENAOSE NEG var1 != var2:\nESCREVER(\"OLA2\");\nFIM",
             "SE NEG var1 == var2: \nESCREVER(\"OLA\");\nFIM",
+            "valor = ENTRADA();",
+            "ate10 = ALEATORIO(10);"
             ]
 for frase in exemplos:
     print(f"----------------------")
