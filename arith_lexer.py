@@ -92,6 +92,13 @@ class ArithLexer:
         # Reconhece comentários de uma linha iniciados por '--'
         # Reconhece comentários multilinha delimitados por '{-' e '-}', foi adicionado o [\s\S] para incluir quebras de linha
         r"(--[^\n]*|{-[\s\S]*?-})"
+
+        # remover os "identificadores" dos comentarios
+        if t.value.startswith('--'):
+            t.value = t.value[2:].strip()
+        elif t.value.startswith('{-'):
+            t.value = t.value[2:-2].strip()
+
         return t
 
     #Reconhecedor de SE

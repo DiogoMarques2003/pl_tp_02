@@ -77,14 +77,14 @@ class ArithGrammar:
         """atribuicao : VAR_ID '=' expressao"""
         p[0] = {'op': 'atribuicao', 'args': [p[1], p[3]]}
 
-    def p_lista_variaveis(self, p):
-        """lista_variaveis : lista_variaveis ',' VAR_ID
-                           | VAR_ID"""
-        if len(p) == 2:
-            p[0] = {'op': 'seq', 'args': [p[1]]}  # Inicia uma nova lista com o primeiro parâmetro
-        else:
-            p[1]['args'].append(p[3])  # Adiciona à lista existente
-            p[0] = p[1]
+    #def p_lista_variaveis(self, p):
+    #    """lista_variaveis : lista_variaveis ',' VAR_ID
+    #                       | VAR_ID"""
+    #    if len(p) == 2:
+    #        p[0] = {'op': 'seq', 'args': [p[1]]}  # Inicia uma nova lista com o primeiro parâmetro
+    #    else:
+    #        p[1]['args'].append(p[3])  # Adiciona à lista existente
+    #        p[0] = p[1]
 
     def p_lista_expressoes(self, p):
         """lista_expressoes : lista_expressoes ',' expressao
@@ -220,7 +220,7 @@ class ArithGrammar:
 
     # Declaração de funções
     def p_declaracao_funcao(self, p):
-        """declaracao_funcao : FUNCAO VAR_ID '(' lista_parametros_opcional ')' ':'   FIM
+        """declaracao_funcao : FUNCAO VAR_ID '(' lista_parametros_opcional ')' ':' bloco_funcao FIM
                              | FUNCAO VAR_ID '(' lista_parametros_opcional ')' ',' ':' expressao ';'"""
         if len(p) == 10:
             # Esta é a forma da função: FUNCAO nome (parametros) ,: expressao;
