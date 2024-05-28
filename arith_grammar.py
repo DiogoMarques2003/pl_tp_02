@@ -287,7 +287,7 @@ class ArithGrammar:
     # Tratamento de comentários no código
     def p_declaracao_comentario(self, p):
         """declaracao_comentario : COMENTARIO"""
-        p[0] = {'op': 'comentario', 'args': p[1]}
+        p[0] = {'op': 'comentario', 'args': [p[1]]}
 
     # Produção vazia para elementos opcionais
     def p_vazio(self, p):
