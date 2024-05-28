@@ -9,10 +9,15 @@ ag.build()
 
 
 if len(sys.argv) == 2:
+    if not sys.argv[1].endswith('.fca'):
+        print('Arquivo não é da linguagem FCA')
+        exit(0)
+
     with open(sys.argv[1], "r") as file:
         contents = file.read()
         try:
             ast = ag.parse(contents)
+            print("Grammar gerado:")
             pp.pprint(ast)
             ArithEval.evaluate(ast)    
         except Exception as e:
@@ -21,6 +26,7 @@ else:
     for expr in iter(lambda: input(">> "), ""):
         try:
             ast = ag.parse(expr)
+            print("Grammar gerado:")
             pp.pprint(ast)
             res = ArithEval.evaluate(ast)
             if res is not None:

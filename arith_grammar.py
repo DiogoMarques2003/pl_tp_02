@@ -77,15 +77,6 @@ class ArithGrammar:
         """atribuicao : VAR_ID '=' expressao"""
         p[0] = {'op': 'atribuicao', 'args': [p[1], p[3]]}
 
-    #def p_lista_variaveis(self, p):
-    #    """lista_variaveis : lista_variaveis ',' VAR_ID
-    #                       | VAR_ID"""
-    #    if len(p) == 2:
-    #        p[0] = {'op': 'seq', 'args': [p[1]]}  # Inicia uma nova lista com o primeiro parâmetro
-    #    else:
-    #        p[1]['args'].append(p[3])  # Adiciona à lista existente
-    #        p[0] = p[1]
-
     def p_lista_expressoes(self, p):
         """lista_expressoes : lista_expressoes ',' expressao
                             | expressao"""
@@ -133,7 +124,11 @@ class ArithGrammar:
     # Números
     def p_expressao_num(self, p):
         """expressao : NUM"""
-        p[0] = {'op': 'literal', 'args': [p[1]]}
+
+        if '.' in p[1]:
+            p[0] = {'op': 'float', 'args': [p[1]]}
+        else:
+            p[0] = {'op': 'int', 'args': [p[1]]}
 
     # Strings
     def p_expressao_string(self, p):
@@ -143,7 +138,7 @@ class ArithGrammar:
         if len(parts) == 1:
             # se ouver apenas uma parte é porque é literal ou var
             if parts[0]['type'] == 'literal':
-                p[0] = {'op': 'literal', 'args': [parts[0]['value']]}
+                p[0] = {'op': 'string', 'args': [parts[0]['value']]}
             else:
                 p[0] = {'var': parts[0]['value']}
         else:
@@ -151,7 +146,7 @@ class ArithGrammar:
             p[0] = {'op': 'concat', 'args': []}
             for part in parts:
                 if part['type'] == 'literal':
-                    p[0]['args'].append({'op': 'literal', 'args': [part['value']]})
+                    p[0]['args'].append({'op': 'string', 'args': [part['value']]})
                 elif part['type'] == 'interpolacao':
                     # Adicionar a variável como uma expressão separada
                     p[0]['args'].append({'var': part['value']})
@@ -287,7 +282,7 @@ class ArithGrammar:
     # Declaração para escrita (output)
     def p_declaracao_escrever(self, p):
         """declaracao_escrever : ESCREVER '(' expressao ')' ';'"""
-        p[0] = {'op': 'escrever', 'args': p[3]}
+        p[0] = {'op': 'escrever', 'args': [p[3]]}
 
     # Tratamento de comentários no código
     def p_declaracao_comentario(self, p):

@@ -49,10 +49,7 @@ class ArithLexer:
     # Reconhecer numeros inteiros e decimais
     def t_NUM(self, t):
         r"[0-9]+(\.[0-9]+)?"
-        if '.' in t.value:
-            t.value = float(t.value)  # Se o número tiver "." converte para floar
-        else:
-            t.value = int(t.value)  # senão converte para int
+        return t
 
         return t
 
