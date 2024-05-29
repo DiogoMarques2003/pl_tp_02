@@ -231,14 +231,10 @@ class ArithGrammar:
 
     # Lista de parâmetros para funções
     def p_lista_parametros(self, p):
-        """lista_parametros : lista_parametros ',' VAR_ID
-                            | lista_parametros ',' NUM
-                            | lista_parametros ',' array_vazio
-                            | lista_parametros ',' var_array
-                            | VAR_ID
-                            | NUM
-                            | array_vazio
-                            | var_array"""
+        """lista_parametros : lista_parametros ',' expressao
+                            | lista_parametros ',' var_id_array
+                            | expressao
+                            | var_id_array"""
         if len(p) == 2:
             p[0] = [p[1]]  # Inicia uma nova lista com o primeiro parâmetro
         else:
@@ -247,14 +243,14 @@ class ArithGrammar:
 
     # Array vazio
     def p_empty_list(self, p):
-        """array_vazio : '[' ']'"""
+        """expressao : '[' ']'"""
         p[0] = []
 
     # VAR_ID:ARRAY
     def p_var_array(self, p):
-        """var_array : VAR_ID ':' VAR_ID '[' ']' """
+        """var_id_array : VAR_ID ':' VAR_ID '[' ']' """
 
-        p[0] = {'op': 'var_array', 'args': [p[1], p[3]]}
+        p[0] = {'op': 'var_id_array', 'args': [p[1], p[3]]}
 
     # Declaração condicional 'se' com opcional 'senão'
     def p_declaracao_se(self, p):
