@@ -40,7 +40,7 @@ class ArithLexer:
     ]
 
     # Ignorar espacos
-    t_ignore = " \n"
+    t_ignore = " \t\n"
 
     # Inicializa o lexer como None
     def __init__(self):

@@ -1,4 +1,6 @@
 # arith.py
+import json
+
 from arith_grammar import ArithGrammar
 from pprint import PrettyPrinter
 
@@ -28,11 +30,27 @@ exemplos = [ # exemplos a avaliar de forma independente...
             "SE NEG var1 == var2: \nESCREVER(\"OLA\");\nSENAOSE NEG var1 != var2:\nESCREVER(\"OLA2\");\nFIM",
             "SE NEG var1 == var2: \nESCREVER(\"OLA\");\nFIM",
             "valor = ENTRADA();",
-            "ate10 = ALEATORIO(10);"
+            "ate10 = ALEATORIO(10);",
+            """
+            FUNCAO soma(a,b),: a+b ;
+            FUNCAO soma2(c) :
+                c = c+1 ;
+                c+1 ;
+            FIM
+            seis = soma(4,2);
+            oito = soma2(seis);"""
             ]
+
+result = {}
+
 for frase in exemplos:
     print(f"----------------------")
     print(f"--- frase '{frase}'")
     resposta = teste.parse( frase )
     print("resultado: ")
     pp.pprint(resposta)
+
+    result[frase] = resposta
+
+with open('result_grammar.json', 'w') as f:
+    json.dump(result, f, indent=4)

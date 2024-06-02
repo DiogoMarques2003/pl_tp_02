@@ -142,8 +142,8 @@ class ArithGrammar:
             else:
                 p[0] = {'var': parts[0]['value']}
         else:
-            # construir a concatnação para a string com vares
-            p[0] = {'op': 'concat', 'args': []}
+            # construir a interpolação para a string e variaveis
+            p[0] = {'op': 'interpolacao', 'args': []}
             for part in parts:
                 if part['type'] == 'literal':
                     p[0]['args'].append({'op': 'string', 'args': [part['value']]})
@@ -198,7 +198,7 @@ class ArithGrammar:
     # Função de entrada de valores
     def p_expressao_entrada(self, p):
         """expressao : ENTRADA '(' ')'"""
-        p[0] = {'op': 'entrada'}
+        p[0] = {'op': 'entrada', 'args': []}
 
     # Função para gerar um número aleatorio
     def p_expressao_aleatorio(self, p):
@@ -231,15 +231,38 @@ class ArithGrammar:
 
     # Lista de parâmetros para funções
     def p_lista_parametros(self, p):
-        """lista_parametros : lista_parametros ',' expressao
-                            | lista_parametros ',' var_id_array
-                            | expressao
-                            | var_id_array"""
+        """lista_parametros : lista_parametros ',' parametro
+                            | parametro"""
         if len(p) == 2:
-            p[0] = [p[1]]  # Inicia uma nova lista com o primeiro parâmetro
+            p[0] = {'op': 'func_param', 'args': [p[1]]}  # Inicia uma nova lista com o primeiro parâmetro
         else:
-            p[1].append(p[3])  # Adiciona à lista existente
+            p[1]['args'].append(p[3])  # Adiciona à lista existente
             p[0] = p[1]
+
+    # Parametro de variavel na função
+    def p_parametro_varid(self, p):
+        """parametro : VAR_ID"""
+        p[0] = {'op': 'var', 'args': [p[1]]}
+
+    # Parametro de numero na função
+    def p_parametro_num(self, p):
+        """parametro : NUM"""
+
+        if '.' in p[1]:
+            p[0] = {'op': 'float', 'args': [p[1]]}
+        else:
+            p[0] = {'op': 'int', 'args': [p[1]]}
+
+    # Parametro de var_id_array na função
+    def p_parametro_var_id_array(self, p):
+        """parametro : VAR_ID ':' VAR_ID '[' ']'"""
+
+        p[0] = {'op': 'var_id_array', 'args': [p[1], p[3]]}
+
+    # Parametro para passagem de arrays vazios
+    def p_parametro_array_vazio(self, p):
+        """parametro : '[' ']'"""
+        p[0] = {'op': 'array_vazio', 'args': []}
 
     # Array vazio
     def p_empty_list(self, p):
@@ -312,7 +335,7 @@ class ArithGrammar:
     def process_interpolated_string(self, text):
         parts = []
         # separar o texto pelas interpolações
-        tokens = re.split(r'(\#\{[^}]+\})', text)
+        tokens = re.split(r"(\#\{[a-z_][a-zA-Z0-9_]*[?!]?\})", text)
         for token in tokens:
             if token.startswith('#{') and token.endswith('}'):
                 # remover o "#{" e "}" da interpolação

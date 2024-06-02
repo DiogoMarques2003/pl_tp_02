@@ -111,3 +111,11 @@ while True:
         break
     print(tk, end="")
 
+print("\n-------\n")
+al.input("""FUNCAO soma(a,b),: a+b ;\nFUNCAO soma2(c) :\nc = c+1 ;\nc+1 ;\nFIM\nseis = soma(4,2);\noito = soma2(seis);""")
+
+while True:
+    tk = al.token()
+    if not tk:
+        break
+    print(tk, end="")

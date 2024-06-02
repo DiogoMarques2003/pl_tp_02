@@ -19,7 +19,8 @@ if len(sys.argv) == 2:
             ast = ag.parse(contents)
             print("Grammar gerado:")
             pp.pprint(ast)
-            ArithEval.evaluate(ast)    
+            resultado = ArithEval.evaluate(ast)
+            print(f"<< {resultado}")
         except Exception as e:
             print(e, file=sys.stderr)
 else:
