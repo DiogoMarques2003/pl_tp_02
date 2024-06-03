@@ -26,9 +26,7 @@ class ArithEval:
         "interpolacao": lambda args: ''.join(args),
         "entrada": lambda args: ArithEval._entrada(args),
         "aleatorio": lambda args: ArithEval._aleatorio(args),
-        "funcao": lambda args: ArithEval._funcao(args),
         "call_func": lambda args: ArithEval._call_func(args),
-        "func_param": lambda args: args,
     }
 
     @staticmethod
@@ -56,10 +54,10 @@ class ArithEval:
         return random.randint(0, maxNumero)
 
     @staticmethod
-    def _funcao(args):
+    def _funcao(args, parametros, corpo):
         func_name = args[0]
-        func_params = args[1]
-        func_body = args[2]
+        func_params = parametros
+        func_body = corpo
 
         if func_name not in ArithEval.functions:
             ArithEval.functions[func_name] = []
@@ -68,6 +66,7 @@ class ArithEval:
             'params': func_params,
             'body': func_body
         })
+
         return func_name
 
     @staticmethod
@@ -82,22 +81,28 @@ class ArithEval:
             func_params = func_def['params']
             func_body = func_def['body']
 
-            if len(func_params['args']) == len(call_params):
+            if len(func_params) == len(call_params):
                 # Salvar o estado atual de symbols
                 previous_symbols = ArithEval.symbols.copy()
 
                 # Adicionar parâmetros ao escopo atual
                 local_symbols = previous_symbols.copy()
-                for param, value in zip(func_params['args'], call_params):
-                    local_symbols[param['var']] = ArithEval.evaluate(value)
+                for param, value in zip(func_params, call_params):
+                    if 'var' in param:
+                        local_symbols[param['var']] = ArithEval.evaluate(value)
+                    elif 'op' in param and ArithEval.evaluate(param) == ArithEval.evaluate(value):
+                        continue
+                    else:
+                        break
+                else:
+                    # Substituir temporariamente o escopo global com o escopo local
+                    ArithEval.symbols = local_symbols
+                    result = ArithEval.evaluate(func_body)
 
-                # Substituir temporariamente o escopo global com o escopo local
-                ArithEval.symbols = local_symbols
-                result = ArithEval.evaluate(func_body)
+                    # Restaurar o estado anterior de symbols
+                    ArithEval.symbols = previous_symbols
+                    return result
 
-                # Restaurar o estado anterior de symbols
-                ArithEval.symbols = previous_symbols
-                return result
 
         raise Exception(f"Nenhuma correspondência de parâmetros para a função '{func_name}'")
 
@@ -109,10 +114,15 @@ class ArithEval:
             return ArithEval._eval_operator(ast)
         if type(ast) is str:
             return ast
+        if type(ast) is list:
+            return [ArithEval.evaluate(a) for a in ast]
         raise Exception(f"Tipo de AST desconhecido {ast}")
 
     @staticmethod
     def _eval_operator(ast):
+        if 'op' in ast and ast['op'] == 'funcao':
+            return ArithEval._funcao(ast['args'], ast['parametros'], ast['corpo'])
+
         if 'op' in ast:
             op = ast["op"]
             args = [ArithEval.evaluate(a) for a in ast['args']]
@@ -120,7 +130,7 @@ class ArithEval:
                 func = ArithEval.operators[op]
                 return func(args)
             else:
-                raise Exception(f"Operador {op} desconhecido")
+                raise Exception(f"Operador '{op}' desconhecido")
 
         if 'var' in ast:
             varid = ast["var"]  # ast={ 'var': "A" } =>   ast["var"]   varid="A"

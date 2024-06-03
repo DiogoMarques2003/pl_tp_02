@@ -156,20 +156,10 @@ class ArithGrammar:
         """expressao : VAR_ID"""
         p[0] = {'var': p[1]}
 
-    # Array
-    def p_expressao_var_array(self, p):
-        """expressao : VAR_ID '[' ']'"""
-        p[0] = {'array': p[1]}
-
     # Elementos array
     def p_expressao_array(self, p):
         """expressao : '[' lista_elementos  ']' """
-        p[0] = {'elementos_array': p[2]}
-
-    # array init
-    def p_expressao_array_init(self, p):
-        """declaracao_atribuicao : VAR_ID '[' ']' '=' '[' lista_elementos ']' ';'"""
-        p[0] = {'op': 'array_init', 'args': [p[1], p[6]]}
+        p[0] = {'op': 'elementos_array', 'args': p[2]}
 
     # Regra para lidar com a lista de elementos dentro dos colchetes
     def p_lista_elementos(self, p):
@@ -186,14 +176,14 @@ class ArithGrammar:
             p[0] = p[1]  # Lista com múltiplos elementos
 
     # Função map
-    def p_expressao_map(self, p):
-        """expressao : MAP '(' VAR_ID ',' lista_expressoes ')'"""
-        p[0] = {'op': 'map', 'args': [p[3], p[5]]}
+    #def p_expressao_map(self, p):
+    #    """expressao : MAP '(' VAR_ID ',' lista_expressoes ')'"""
+    #    p[0] = {'op': 'map', 'args': [p[3], p[5]]}
 
     # Função fold
-    def p_expressao_fold(self, p):
-        """expressao : FOLD '(' VAR_ID ',' lista_expressoes ',' expressao ')'"""
-        p[0] = {'op': 'fold', 'args': [p[3], p[5], p[7]]}
+    #def p_expressao_fold(self, p):
+    #    """expressao : FOLD '(' VAR_ID ',' lista_expressoes ',' expressao ')'"""
+    #    p[0] = {'op': 'fold', 'args': [p[3], p[5], p[7]]}
 
     # Função de entrada de valores
     def p_expressao_entrada(self, p):
@@ -211,7 +201,7 @@ class ArithGrammar:
         if p[1] in ['map', 'fold']:  # se for a função map e fold a operação são eles mesmos
             p[0] = {'op': p[1], 'args': p[3]}
         else:
-            p[0] = {'op': 'call_func', 'args': [p[1], p[3]]}
+            p[0] = {'op': 'call_func', 'args': [p[1], [p[3]] if not isinstance(p[3], list) else p[3]]}
 
     # Declaração de funções
     def p_declaracao_funcao(self, p):
@@ -219,9 +209,11 @@ class ArithGrammar:
                              | FUNCAO VAR_ID '(' lista_parametros_opcional ')' ',' ':' expressao ';'"""
         if len(p) == 10:
             # Esta é a forma da função: FUNCAO nome (parametros) ,: expressao;
-            p[0] = {'op': 'funcao', 'args': [p[2], p[4], p[8]]}  # Captura a expressão em p[8]
+            #p[0] = {'op': 'funcao', 'args': [p[2], p[4], { 'op': 'corpo_funcao', 'args': p[8] }]}  # Captura a expressão em p[8]
+            p[0] = {'op': 'funcao', 'args': [p[2]], 'parametros': p[4], 'corpo': p[8]}
         else:
-            p[0] = {'op': 'funcao', 'args': [p[2], p[4], p[7]]}
+            p[0] = {'op': 'funcao', 'args': [p[2]], 'parametros': p[4], 'corpo': p[7]}
+            #p[0] = {'op': 'funcao', 'args': [p[2], p[4], p[7]]}
 
     # Lista opcional de parâmetros para funções
     def p_lista_parametros_opcional(self, p):
@@ -234,15 +226,15 @@ class ArithGrammar:
         """lista_parametros : lista_parametros ',' parametro
                             | parametro"""
         if len(p) == 2:
-            p[0] = {'op': 'func_param', 'args': [p[1]]}  # Inicia uma nova lista com o primeiro parâmetro
+            p[0] = [p[1]]  # Inicia uma nova lista com o primeiro parâmetro
         else:
-            p[1]['args'].append(p[3])  # Adiciona à lista existente
+            p[1].append(p[3])  # Adiciona à lista existente
             p[0] = p[1]
 
     # Parametro de variavel na função
     def p_parametro_varid(self, p):
         """parametro : VAR_ID"""
-        p[0] = {'op': 'var', 'args': [p[1]]}
+        p[0] = {'var': p[1]}
 
     # Parametro de numero na função
     def p_parametro_num(self, p):
@@ -255,7 +247,7 @@ class ArithGrammar:
 
     # Parametro de var_id_array na função
     def p_parametro_var_id_array(self, p):
-        """parametro : VAR_ID ':' VAR_ID '[' ']'"""
+        """parametro : VAR_ID ':' VAR_ID"""
 
         p[0] = {'op': 'var_id_array', 'args': [p[1], p[3]]}
 
@@ -268,12 +260,6 @@ class ArithGrammar:
     def p_empty_list(self, p):
         """expressao : '[' ']'"""
         p[0] = []
-
-    # VAR_ID:ARRAY
-    def p_var_array(self, p):
-        """var_id_array : VAR_ID ':' VAR_ID '[' ']' """
-
-        p[0] = {'op': 'var_id_array', 'args': [p[1], p[3]]}
 
     # Declaração condicional 'se' com opcional 'senão'
     def p_declaracao_se(self, p):
