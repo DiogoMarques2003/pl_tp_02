@@ -40,6 +40,8 @@ class ArithEval:
         "call_func": lambda args: ArithEval._call_func(args),
         "elementos_array": lambda args: args,
         "array_vazio": lambda args: [],
+        "map": lambda args: ArithEval._map(args),
+        "fold": lambda args: ArithEval._fold(args),
     }
 
     @staticmethod
@@ -145,7 +147,7 @@ class ArithEval:
     @staticmethod
     def _map(args):
         funcao = args[0]  # Obter o nome da função
-        array = ArithEval.evaluate(args[1])  # Obter o array
+        array = args[1]  # Obter o array
 
         # Validar se o parametro é mesmo um array
         if type(array) is not list:
@@ -167,8 +169,8 @@ class ArithEval:
     @staticmethod
     def _fold(args):
         funcao = args[0]  # Obter o nome da função
-        array = ArithEval.evaluate(args[1])  # Obter o array
-        valor_inicial = ArithEval.evaluate(args[2])  # Obter o valor inicial para o fold
+        array = args[1]  # Obter o array
+        valor_inicial = args[2]  # Obter o valor inicial para o fold
 
         # Validar se o parametro é mesmo um array
         if type(array) is not list:
@@ -234,14 +236,6 @@ class ArithEval:
         # Processar quando for uma função
         if 'op' in ast and ast['op'] == 'funcao':
             return ArithEval._funcao(ast['args'])
-
-        # Processar quando for um map
-        if 'op' in ast and ast['op'] == 'map':
-            return ArithEval._map(ast['args'])
-
-        # Processar quando for um fold
-        if 'op' in ast and ast['op'] == 'fold':
-            return ArithEval._fold(ast['args'])
 
         # Processar quando for um se
         if 'op' in ast and ast['op'] == 'se':

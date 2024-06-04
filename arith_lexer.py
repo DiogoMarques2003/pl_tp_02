@@ -162,24 +162,24 @@ class ArithLexer:
         r"!="
         return t
 
-    # Reconhecer o LT
-    def t_LT(self, t):
-        r"<\b"
-        return t
-
     # Reconhecer o LE
     def t_LE(self, t):
         r"<="
         return t
 
-    # Reconhecer o GT
-    def t_GT(self, t):
-        r">\b"
-        return t
-
     # Reconhecer o GE
     def t_GE(self, t):
         r">="
+        return t
+
+    # Reconhecer o LT
+    def t_LT(self, t):
+        r"<"
+        return t
+
+    # Reconhecer o GT
+    def t_GT(self, t):
+        r">"
         return t
     
     # Reconhecer uma variavel e função
