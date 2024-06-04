@@ -51,8 +51,6 @@ class ArithLexer:
         r"[0-9]+(\.[0-9]+)?"
         return t
 
-        return t
-
     # Reconhecer a Palavra ESC ou ESCREVER
     def t_ESCREVER(self, t):
         # \b -> limite de palavra, garante que é exatamente o que está no regex
