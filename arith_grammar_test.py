@@ -27,7 +27,7 @@ exemplos = [ # exemplos a avaliar de forma independente...
             "FUNCAO somatorio( [] ),: 0 ;FUNCAO somatorio( x:xs ),: x + somatorio(xs) ;",
             "SE var1 == var2: \nESCREVER(\"OLA\");\nSENAOSE var1 != var2:\nESCREVER(\"OLA2\");\nFIM",
             "SE var1 == var2: \nESCREVER(\"OLA\");\nFIM",
-            "SE NEG var1 == var2: \nESCREVER(\"OLA\");\nSENAOSE NEG var1 != var2:\nESCREVER(\"OLA2\");\nFIM",
+            "SE NEG var1 == var2: \nESCREVER(\"OLA\");\nSENAOSE NEG var1 != var2:\nESCREVER(\"OLA2\");\nSENAO: var1 = 2 \nFIM",
             "SE NEG var1 == var2: \nESCREVER(\"OLA\");\nFIM",
             "valor = ENTRADA();",
             "ate10 = ALEATORIO(10);",
@@ -40,7 +40,14 @@ exemplos = [ # exemplos a avaliar de forma independente...
             seis = soma(4,2);
             oito = soma2(seis);""",
             """lista2 = map( mais2, [ 1, 2, 3 ] );
-            lista3 = FOLD( soma, [ 1, 2, 3 ], 0 ); """
+            lista3 = FOLD( soma, [ 1, 2, 3 ], 0 ); """,
+"""valor1 = 20;
+valor2 = 20;
+SE valor1 <= valor2 && 1 == 1:
+    ESCREVER("Menor");
+SENAOSE:
+    ESCREVER("Maior ou igual");
+FIM"""
             ]
 
 result = {}

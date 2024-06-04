@@ -129,3 +129,18 @@ while True:
     if not tk:
         break
     print(tk, end="")
+
+print("\n-------\n")
+al.input("""valor1 = 20;
+valor2 = 20;
+SE valor1 <= valor2 && 1 == 1
+    ESCREVER("Menor");
+SENAOSE:
+    ESCREVER("Maior ou igual");
+FIM""")
+
+while True:
+    tk = al.token()
+    if not tk:
+        break
+    print(tk, end="")

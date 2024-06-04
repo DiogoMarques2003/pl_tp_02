@@ -1166,16 +1166,12 @@
                                 ]
                             }
                         ]
-                    },
-                    {
-                        "op": "senao",
-                        "args": []
                     }
                 ]
             }
         ]
     },
-    "SE NEG var1 == var2: \nESCREVER(\"OLA\");\nSENAOSE NEG var1 != var2:\nESCREVER(\"OLA2\");\nFIM": {
+    "SE NEG var1 == var2: \nESCREVER(\"OLA\");\nSENAOSE NEG var1 != var2:\nESCREVER(\"OLA2\");\nSENAO: var1 = 2 \nFIM": {
         "op": "seq",
         "args": [
             {
@@ -1249,6 +1245,33 @@
                                 ]
                             }
                         ]
+                    },
+                    {
+                        "op": "senao",
+                        "args": [
+                            {
+                                "op": "seq",
+                                "args": [
+                                    {
+                                        "op": "seq",
+                                        "args": [
+                                            {
+                                                "op": "atribuicao",
+                                                "args": [
+                                                    "var1",
+                                                    {
+                                                        "op": "int",
+                                                        "args": [
+                                                            "2"
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
                     }
                 ]
             }
@@ -1291,10 +1314,6 @@
                                 ]
                             }
                         ]
-                    },
-                    {
-                        "op": "senao",
-                        "args": []
                     }
                 ]
             }
@@ -1528,6 +1547,44 @@
                                 "op": "int",
                                 "args": [
                                     "0"
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "valor1 <= valor2 && 1 == 1;": {
+        "op": "seq",
+        "args": [
+            {
+                "op": "&&",
+                "args": [
+                    {
+                        "op": "<=",
+                        "args": [
+                            {
+                                "var": "valor1"
+                            },
+                            {
+                                "var": "valor2"
+                            }
+                        ]
+                    },
+                    {
+                        "op": "==",
+                        "args": [
+                            {
+                                "op": "int",
+                                "args": [
+                                    "1"
+                                ]
+                            },
+                            {
+                                "op": "int",
+                                "args": [
+                                    "1"
                                 ]
                             }
                         ]

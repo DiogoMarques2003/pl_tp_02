@@ -15,6 +15,17 @@ class ArithEval:
         "-": lambda args: args[0] - args[1],
         "*": lambda args: args[0] * args[1],
         "/": lambda args: args[0] / args[1],
+        # Condições dos ifs
+        "==": lambda args: args[0] == args[1],
+        "!=": lambda args: args[0] != args[1],
+        "<": lambda args: args[0] < args[1],
+        ">": lambda args: args[0] > args[1],
+        "<=": lambda args: args[0] <= args[1],
+        ">=": lambda args: args[0] >= args[1],
+        "&&": lambda args: args[0] and args[1],
+        "||": lambda args: args[0] or args[1],
+        'neg': lambda args: not args[0],
+        #####
         "seq": lambda args: args[-1],
         "string": lambda args: str(args[0]),
         "float": lambda args: float(args[0]),
@@ -28,6 +39,7 @@ class ArithEval:
         "aleatorio": lambda args: ArithEval._aleatorio(args),
         "call_func": lambda args: ArithEval._call_func(args),
         "elementos_array": lambda args: args,
+        "array_vazio": lambda args: [],
     }
 
     @staticmethod
@@ -40,72 +52,170 @@ class ArithEval:
 
     @staticmethod
     def _comentario(args):
+        # Devolver None porque é um comentario
         return None
 
     @staticmethod
     def _entrada(args):
+        # Chamar a função de input do python para introduzir o valor
         return input("Função entrada, introduza o valor: ")
 
     @staticmethod
     def _aleatorio(args):
-        maxNumero = int(args[0])
+        maxNumero = int(args[0])  # Obter o parametro da função aleatorio
+        # Validar se não é menor que 0
         if maxNumero <= 0:
             raise Exception("O valor do aleatorio tem de ser maior que 0")
 
+        # Devolver um número random entre 0 e o parametro
         return random.randint(0, maxNumero)
 
     @staticmethod
     def _funcao(args):
-        func_name = args[0]
-        func_params = args[1]
-        func_body = args[2]
+        nome_funcao = args[0]
+        parametros_funcao = args[1]
+        corpo_funcao = args[2]
 
-        if func_name not in ArithEval.functions:
-            ArithEval.functions[func_name] = []
+        if nome_funcao not in ArithEval.functions:
+            ArithEval.functions[nome_funcao] = []
 
-        ArithEval.functions[func_name].append({
-            'params': func_params,
-            'body': func_body
+        ArithEval.functions[nome_funcao].append({
+            'parametros': parametros_funcao,
+            'corpo': corpo_funcao
         })
 
-        return func_name
+        return nome_funcao
 
     @staticmethod
     def _call_func(args):
-        func_name = args[0]
-        call_params = args[1]
+        nome_funcao = args[0]
+        parametros_chamada = args[1]
 
-        if func_name not in ArithEval.functions:
-            raise Exception(f"Função '{func_name}' não declarada")
+        # Validar se a função foi declarada
+        if nome_funcao not in ArithEval.functions:
+            raise Exception(f"Função '{nome_funcao}' não declarada")
 
-        for func_def in ArithEval.functions[func_name]:
-            func_params = func_def['params']
-            func_body = func_def['body']
+        # Percorrer as funções com o nome
+        for func_def in ArithEval.functions[nome_funcao]:
+            parametros_funcao = func_def['parametros'] # Obter os parametros da função
+            copor_funcao = func_def['corpo'] # Obter o corpo da função
 
-            if len(func_params) == len(call_params):
-                # Salvar o estado atual de symbols
-                previous_symbols = ArithEval.symbols.copy()
+            # Validar se os parametros da função e os que estamos a passar são os mesmos
+            if len(parametros_funcao) == len(parametros_chamada):
+                # Salvar o estado atual das variaveis
+                estado_temp = ArithEval.symbols.copy()
 
-                # Adicionar parâmetros ao escopo atual
-                local_symbols = previous_symbols.copy()
-                for param, value in zip(func_params, call_params):
+                # Adicionar as variaveis as variaveis da função porque as mesmas são globais
+                funcao_symbols = estado_temp.copy()
+
+                # O zip é para percorrer os dois arrays ao mesmo tempo, ou sejá, ele meio que gera uma matriz
+                for param, value in zip(parametros_funcao, parametros_chamada):
+                    # Se o parametro da função for uma var adicionamos o valor que estamos a passar na chamada
                     if 'var' in param:
-                        local_symbols[param['var']] = ArithEval.evaluate(value)
+                        funcao_symbols[param['var']] = ArithEval.evaluate(value)
+                    # Se for um var:array pegamos no 1º valor do array e depois passamos o resto do array
+                    elif 'op' in param and param['op'] == 'var_id_array':
+                        array = ArithEval.evaluate(value) # Obter os dados do array
+
+                        # Validar se é realmente um array
+                        if type(array) is not list:
+                            raise Exception(f"O parametro da função {nome_funcao} tem de ser um array")
+
+                        funcao_symbols[param['args'][0]] = array.pop()  # Remover o 1º elemento do array
+                        funcao_symbols[param['args'][1]] = array  # Passar o resto dos elementos do array
+                    # Se o parametro for um numero e for igual ao que estamos a passar nós avançamos
                     elif 'op' in param and ArithEval.evaluate(param) == ArithEval.evaluate(value):
                         continue
                     else:
                         break
-                else:
-                    # Substituir temporariamente o escopo global com o escopo local
-                    ArithEval.symbols = local_symbols
-                    result = ArithEval.evaluate(func_body)
+                else: # Se todos os parametros da função estiverem validos nós executamos a função da iteração atual do loop
+                    # Substituir temporariamente as variaveis globais
+                    ArithEval.symbols = funcao_symbols
+                    # Processar o corpo da função
+                    result = ArithEval.evaluate(copor_funcao)
 
-                    # Restaurar o estado anterior de symbols
-                    ArithEval.symbols = previous_symbols
+                    # Restaurar as variaveis globais
+                    ArithEval.symbols = estado_temp
+                    # Returnar o resultado da execução do corpo da função
                     return result
 
+        # Devolver o erro caso não exista nenhuma convinação de parametros correta para a função
+        raise Exception(f"Nenhuma correspondência de parâmetros para a função '{nome_funcao}'")
 
-        raise Exception(f"Nenhuma correspondência de parâmetros para a função '{func_name}'")
+    @staticmethod
+    def _map(args):
+        funcao = args[0]  # Obter o nome da função
+        array = ArithEval.evaluate(args[1])  # Obter o array
+
+        # Validar se o parametro é mesmo um array
+        if type(array) is not list:
+            raise Exception(f"O segundo parametro do map tem de ser um array")
+
+        # Validar se a função existe
+        if funcao not in ArithEval.functions:
+            raise Exception(f"A função passada no map não foi declarada")
+
+        resultado = []
+
+        # Percorrer os elementos do array e chamar a função para cada elemento
+        for item in array:
+            resultado.append(ArithEval._call_func([funcao, [item]]))
+
+        # Devolver o resultado final
+        return resultado
+
+    @staticmethod
+    def _fold(args):
+        funcao = args[0]  # Obter o nome da função
+        array = ArithEval.evaluate(args[1])  # Obter o array
+        valor_inicial = ArithEval.evaluate(args[2])  # Obter o valor inicial para o fold
+
+        # Validar se o parametro é mesmo um array
+        if type(array) is not list:
+            raise Exception(f"O segundo parametro do fold tem de ser um array")
+
+        # Validar se o parametro é mesmo um número
+        if type(valor_inicial) is not int:
+            raise Exception(f"O terceiro parametro do fold tem de ser um número ")
+
+        # Validar se a função existe
+        if funcao not in ArithEval.functions:
+            raise Exception(f"A função passada no map não foi declarada")
+
+        # O resultado começa com o valor inicial
+        resultado = valor_inicial
+
+        # Percorrer o array ao "contrario"
+        for item in reversed(array):
+            resultado = ArithEval._call_func([funcao, [item, resultado]])
+
+        return resultado
+
+    @staticmethod
+    def _se(args):
+        condicao = ArithEval._eval_operator(args[0]) # Validar a condição
+
+        # Se for verdadeira retornar o valor do SE
+        if condicao:
+            return ArithEval.evaluate(args[1])
+        elif len(args) > 2: # Se os args forem maiores que 2 quer dizer que tem um senão ou um senão se
+            index = 2
+            while index < len(args):
+                # Verificar se é uma condição senao_se
+                if 'op' in args[index] and args[index]['op'] == 'senao_se':
+                    condicao_senao_se = ArithEval.evaluate(args[index]['args'][0]) # Obter o valor da condição
+                    # Validar condição, se for verdadeira executar o código da mesma
+                    if condicao_senao_se:
+                        return ArithEval.evaluate(args[index]['args'][1])
+                    index +=1  # Pular para o proxima senão_se ou senao
+                # Validar a condição de senão
+                elif 'op' in args[index] and args[index]['op'] == 'senao':
+                    return ArithEval.evaluate(args[index]['args'][0])
+                else:
+                    index += 1
+
+        return None
+
 
     @staticmethod
     def evaluate(ast):
@@ -115,14 +225,27 @@ class ArithEval:
             return ArithEval._eval_operator(ast)
         if type(ast) is str:
             return ast
-        if type(ast) is list:
+        if type(ast) is list: # [ item, item ]
             return [ArithEval.evaluate(a) for a in ast]
         raise Exception(f"Tipo de AST desconhecido {ast}")
 
     @staticmethod
     def _eval_operator(ast):
+        # Processar quando for uma função
         if 'op' in ast and ast['op'] == 'funcao':
             return ArithEval._funcao(ast['args'])
+
+        # Processar quando for um map
+        if 'op' in ast and ast['op'] == 'map':
+            return ArithEval._map(ast['args'])
+
+        # Processar quando for um fold
+        if 'op' in ast and ast['op'] == 'fold':
+            return ArithEval._fold(ast['args'])
+
+        # Processar quando for um se
+        if 'op' in ast and ast['op'] == 'se':
+            return ArithEval._se(ast['args'])
 
         if 'op' in ast:
             op = ast["op"]

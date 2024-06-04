@@ -7,6 +7,8 @@ import ply.yacc as pyacc
 class ArithGrammar:
     # Define a precedência dos operadores para resolver questões na gramatica
     precedence = (
+        ('left', 'AND', 'OR'),  # Operadores de and e or com associatividade à esquerda
+        ('left', 'EQ', 'NE', 'LT', 'GT', 'LE', 'GE'),  # Operadores relacionais com associatividade à esquerda
         ('left', '+', '-'),  # Operadores de adição e subtração com associatividade à esquerda
         ('left', '*', '/'),  # Operadores de multiplicação e divisão com associatividade à esquerda
         ('right', 'UMINUS', 'UNARY_NEG'),  # Operadores unários como '-' (negativo) e 'NEG' têm associatividade à direita
@@ -98,18 +100,22 @@ class ArithGrammar:
         """expressao : expressao '+' expressao
                      | expressao '-' expressao
                      | expressao '*' expressao
-                     | expressao '/' expressao
-                     | expressao '=' '=' expressao
-                     | expressao '<' expressao
-                     | expressao '>' expressao
-                     | expressao '<' '=' expressao
-                     | expressao '>' '=' expressao
-                     | expressao '!' '=' expressao"""
+                     | expressao '/' expressao"""
 
-        if len(p) == 4:
-            p[0] = {'op': p[2], 'args': [p[1], p[3]]}  # Cria objeto para a operação
-        else:
-            p[0] = {'op': ''.join([p[2], p[3]]), 'args': [p[1], p[4]]} # Para expressões onde tenhem mais que um operador
+        p[0] = {'op': p[2], 'args': [p[1], p[3]]}  # Cria objeto para a operação
+
+    # Expressões do se/senao_se
+    def p_expressao_se(self, p):
+        """expressao : expressao AND expressao
+                     | expressao OR expressao
+                     | expressao EQ expressao
+                     | expressao NE expressao
+                     | expressao LT expressao
+                     | expressao LE expressao
+                     | expressao GT expressao
+                     | expressao GE expressao"""
+
+        p[0] = {'op': p[2], 'args': [p[1], p[3]]}  # Cria objeto para a operação
 
     # Expressões entre parênteses
     def p_expressao_grupo(self, p):
@@ -258,21 +264,32 @@ class ArithGrammar:
 
     # Declaração condicional 'se' com opcional 'senão'
     def p_declaracao_se(self, p):
-        """declaracao_se : SE expressao ':' lista_declaracoes senao FIM"""
-        p[0] = {'op': 'se', 'args': [p[2], p[4], p[5]]}
+        """declaracao_se : SE expressao ':' lista_declaracoes senao_opcional FIM"""
+        p[0] = {'op': 'se', 'args': [p[2], p[4]]}
+
+        # Validar se existe alguma condição de senao_se ou senao
+        if p[5] is not None:
+            p[0]['args'].extend(p[5])  # extend adiciona todos os itens de um array ao outro
 
     # Parte opcional 'senao' e 'senaose' para a declaração condicional
     def p_senao_opcional(self, p):
-        """senao : SENAO ':' lista_declaracoes
-                 | SENAOSE expressao ':' lista_declaracoes
-                 | vazio"""
+        """senao_opcional  : SENAO ':' lista_declaracoes
+                           | senao_se
+                           | vazio"""
 
-        if len(p) == 4:
-            p[0] = {'op': 'senao', 'args': p[3]}
-        elif len(p) == 5:
-            p[0] = {'op': 'senao_se', 'args': [p[2], p[4]]}
-        else:
-            p[0] = {'op': 'senao', 'args': []}
+        if len(p) == 2 and p[1] is not None:
+            p[0] = p[1]
+        elif len(p) == 4 and p[3] is not None:
+            p[0] = [{'op': 'senao', 'args': [p[3]]}]
+
+    # Parte do senão se
+    def p_senao_se(self, p):
+        """senao_se : SENAOSE expressao ':' lista_declaracoes senao_opcional"""
+        p[0] = [{'op': 'senao_se', 'args': [p[2], p[4]]}]
+
+        # Validar se existe mais senao_se ou senao
+        if p[5] is not None:
+            p[0].extend(p[5])  # extend adiciona todos os itens de um array ao outro
 
     # Negação da espreção das condições 'se' e 'senaose'
     def p_expressao_negacao(self, p):

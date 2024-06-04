@@ -19,6 +19,14 @@ class ArithLexer:
         "MAP",  # Identificador para a função MAP
         "FOLD",  # Identificador para a função FOLD
         "CONCAT",  # Identificador de concatnação
+        "AND",  # Identificador do and
+        "OR",  # Identificador do or
+        "EQ",  # Identificador de igual
+        "NE",  # Identificador do diferente
+        "LT",  # Identificador do menor
+        "LE",  # Identificador do menor ou igual
+        "GT",  # Identificador do maior
+        "GE",  # Identificador do maior ou igual
     )
 
     literals = [
@@ -132,6 +140,46 @@ class ArithLexer:
     #Reconhecedor de ALEATORIO
     def t_ALEATORIO(self, t):
         r"[Aa][Ll][Ee][Aa][Tt][Oo][Rr][Ii][Oo]"
+        return t
+
+    # Reconhecer o AND
+    def t_AND(self, t):
+        r"&&"
+        return t
+
+    # Reconhecer o OR
+    def t_OR(self, t):
+        r"\|\|"
+        return t
+
+    # Reconhecer o EQ
+    def t_EQ(self, t):
+        r"=="
+        return t
+
+    # Reconhecer o NE
+    def t_NE(self, t):
+        r"!="
+        return t
+
+    # Reconhecer o LT
+    def t_LT(self, t):
+        r"<\b"
+        return t
+
+    # Reconhecer o LE
+    def t_LE(self, t):
+        r"<="
+        return t
+
+    # Reconhecer o GT
+    def t_GT(self, t):
+        r">\b"
+        return t
+
+    # Reconhecer o GE
+    def t_GE(self, t):
+        r">="
         return t
     
     # Reconhecer uma variavel e função
