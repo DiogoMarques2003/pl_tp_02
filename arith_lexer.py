@@ -59,14 +59,6 @@ class ArithLexer:
         r"[Ee][Ss][Cc]([Rr][Ee][Vv][Ee][Rr])?\b"
         return t
 
-    # Reconhecer uma variavel e função
-    def t_VAR_ID(self, t):
-        # Deve iniciar por letra minuscula ou _
-        # Depois pode ter qualquer letra minuscula/maiuscula e números
-        # Pode terminar com ? ou !
-        r"[a-z_][a-zA-Z0-9_]*[?!]?"
-        return t
-
     # Reconhecedor de FIM
     def t_FIM(self, t):
         r"[Ff][Ii][Mm]"
@@ -126,12 +118,12 @@ class ArithLexer:
 
     #Reconhecedor de MAP
     def t_MAP(self, t):
-        r"[Mm][Aa][Pp]"
+        r"[Mm][Aa][Pp]\b"
         return t
 
     #Reconhecedor de FOLD
     def t_FOLD(self, t):
-        r"[Ff][Oo][Ll][Dd]"
+        r"[Ff][Oo][Ll][Dd]\b"
         return t
 
     #Reconhecedor de CONCAT
@@ -142,6 +134,14 @@ class ArithLexer:
     #Reconhecedor de ALEATORIO
     def t_ALEATORIO(self, t):
         r"[Aa][Ll][Ee][Aa][Tt][Oo][Rr][Ii][Oo]"
+        return t
+    
+    # Reconhecer uma variavel e função
+    def t_VAR_ID(self, t):
+        # Deve iniciar por letra minuscula ou _
+        # Depois pode ter qualquer letra minuscula/maiuscula e números
+        # Pode terminar com ? ou !
+        r"[a-z_][a-zA-Z0-9_]*[?!]?"
         return t
 
     # cria o lexer

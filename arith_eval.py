@@ -27,6 +27,7 @@ class ArithEval:
         "entrada": lambda args: ArithEval._entrada(args),
         "aleatorio": lambda args: ArithEval._aleatorio(args),
         "call_func": lambda args: ArithEval._call_func(args),
+        "elementos_array": lambda args: args,
     }
 
     @staticmethod
@@ -54,10 +55,10 @@ class ArithEval:
         return random.randint(0, maxNumero)
 
     @staticmethod
-    def _funcao(args, parametros, corpo):
+    def _funcao(args):
         func_name = args[0]
-        func_params = parametros
-        func_body = corpo
+        func_params = args[1]
+        func_body = args[2]
 
         if func_name not in ArithEval.functions:
             ArithEval.functions[func_name] = []
@@ -121,7 +122,7 @@ class ArithEval:
     @staticmethod
     def _eval_operator(ast):
         if 'op' in ast and ast['op'] == 'funcao':
-            return ArithEval._funcao(ast['args'], ast['parametros'], ast['corpo'])
+            return ArithEval._funcao(ast['args'])
 
         if 'op' in ast:
             op = ast["op"]

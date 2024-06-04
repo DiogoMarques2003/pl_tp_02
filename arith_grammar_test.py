@@ -38,7 +38,9 @@ exemplos = [ # exemplos a avaliar de forma independente...
                 c+1 ;
             FIM
             seis = soma(4,2);
-            oito = soma2(seis);"""
+            oito = soma2(seis);""",
+            """lista2 = map( mais2, [ 1, 2, 3 ] );
+            lista3 = FOLD( soma, [ 1, 2, 3 ], 0 ); """
             ]
 
 result = {}

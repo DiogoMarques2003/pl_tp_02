@@ -176,14 +176,14 @@ class ArithGrammar:
             p[0] = p[1]  # Lista com múltiplos elementos
 
     # Função map
-    #def p_expressao_map(self, p):
-    #    """expressao : MAP '(' VAR_ID ',' lista_expressoes ')'"""
-    #    p[0] = {'op': 'map', 'args': [p[3], p[5]]}
+    def p_expressao_map(self, p):
+       """expressao : MAP '(' VAR_ID ',' expressao ')'"""
+       p[0] = {'op': 'map', 'args': [p[3], p[5]]}
 
     # Função fold
-    #def p_expressao_fold(self, p):
-    #    """expressao : FOLD '(' VAR_ID ',' lista_expressoes ',' expressao ')'"""
-    #    p[0] = {'op': 'fold', 'args': [p[3], p[5], p[7]]}
+    def p_expressao_fold(self, p):
+       """expressao : FOLD '(' VAR_ID ',' expressao ',' expressao ')'"""
+       p[0] = {'op': 'fold', 'args': [p[3], p[5], p[7]]}
 
     # Função de entrada de valores
     def p_expressao_entrada(self, p):
@@ -198,10 +198,7 @@ class ArithGrammar:
     #Chamar funções
     def p_expressao_chamada_funcao(self, p):
         """expressao : VAR_ID '(' lista_expressoes ')'"""
-        if p[1] in ['map', 'fold']:  # se for a função map e fold a operação são eles mesmos
-            p[0] = {'op': p[1], 'args': p[3]}
-        else:
-            p[0] = {'op': 'call_func', 'args': [p[1], [p[3]] if not isinstance(p[3], list) else p[3]]}
+        p[0] = {'op': 'call_func', 'args': [p[1], [p[3]] if not isinstance(p[3], list) else p[3]]}
 
     # Declaração de funções
     def p_declaracao_funcao(self, p):
@@ -209,11 +206,9 @@ class ArithGrammar:
                              | FUNCAO VAR_ID '(' lista_parametros_opcional ')' ',' ':' expressao ';'"""
         if len(p) == 10:
             # Esta é a forma da função: FUNCAO nome (parametros) ,: expressao;
-            #p[0] = {'op': 'funcao', 'args': [p[2], p[4], { 'op': 'corpo_funcao', 'args': p[8] }]}  # Captura a expressão em p[8]
-            p[0] = {'op': 'funcao', 'args': [p[2]], 'parametros': p[4], 'corpo': p[8]}
+            p[0] = {'op': 'funcao', 'args': [p[2], p[4], p[8]]}
         else:
-            p[0] = {'op': 'funcao', 'args': [p[2]], 'parametros': p[4], 'corpo': p[7]}
-            #p[0] = {'op': 'funcao', 'args': [p[2], p[4], p[7]]}
+            p[0] = {'op': 'funcao', 'args': [p[2], p[4], p[7]]}
 
     # Lista opcional de parâmetros para funções
     def p_lista_parametros_opcional(self, p):

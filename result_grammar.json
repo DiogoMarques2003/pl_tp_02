@@ -174,27 +174,27 @@
             {
                 "op": "funcao",
                 "args": [
-                    "teste"
-                ],
-                "parametros": [
-                    {
-                        "var": "a"
-                    },
-                    {
-                        "var": "b"
-                    }
-                ],
-                "corpo": {
-                    "op": "+",
-                    "args": [
+                    "teste",
+                    [
                         {
                             "var": "a"
                         },
                         {
                             "var": "b"
                         }
-                    ]
-                }
+                    ],
+                    {
+                        "op": "+",
+                        "args": [
+                            {
+                                "var": "a"
+                            },
+                            {
+                                "var": "b"
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     },
@@ -204,16 +204,13 @@
             {
                 "op": "funcao",
                 "args": [
-                    "soma2"
-                ],
-                "parametros": [
+                    "soma2",
+                    [
+                        {
+                            "var": "c"
+                        }
+                    ],
                     {
-                        "var": "c"
-                    }
-                ],
-                "corpo": {
-                    "op": "corpo_funcao",
-                    "args": {
                         "op": "seq",
                         "args": [
                             {
@@ -252,7 +249,7 @@
                             }
                         ]
                     }
-                }
+                ]
             }
         ]
     },
@@ -296,41 +293,38 @@
             {
                 "op": "funcao",
                 "args": [
-                    "soma"
-                ],
-                "parametros": [
-                    {
-                        "var": "a"
-                    },
-                    {
-                        "var": "b"
-                    }
-                ],
-                "corpo": {
-                    "op": "+",
-                    "args": [
+                    "soma",
+                    [
                         {
                             "var": "a"
                         },
                         {
                             "var": "b"
                         }
-                    ]
-                }
+                    ],
+                    {
+                        "op": "+",
+                        "args": [
+                            {
+                                "var": "a"
+                            },
+                            {
+                                "var": "b"
+                            }
+                        ]
+                    }
+                ]
             },
             {
                 "op": "funcao",
                 "args": [
-                    "soma2"
-                ],
-                "parametros": [
+                    "soma2",
+                    [
+                        {
+                            "var": "c"
+                        }
+                    ],
                     {
-                        "var": "c"
-                    }
-                ],
-                "corpo": {
-                    "op": "corpo_funcao",
-                    "args": {
                         "op": "seq",
                         "args": [
                             {
@@ -369,7 +363,7 @@
                             }
                         ]
                     }
-                }
+                ]
             },
             {
                 "op": "atribuicao",
@@ -405,9 +399,11 @@
                         "op": "call_func",
                         "args": [
                             "soma2",
-                            {
-                                "var": "seis"
-                            }
+                            [
+                                {
+                                    "var": "seis"
+                                }
+                            ]
                         ]
                     }
                 ]
@@ -519,52 +515,52 @@
             {
                 "op": "funcao",
                 "args": [
-                    "area"
-                ],
-                "parametros": [
-                    {
-                        "var": "a"
-                    },
-                    {
-                        "var": "b"
-                    }
-                ],
-                "corpo": {
-                    "op": "*",
-                    "args": [
+                    "area",
+                    [
                         {
                             "var": "a"
                         },
                         {
                             "var": "b"
                         }
-                    ]
-                }
+                    ],
+                    {
+                        "op": "*",
+                        "args": [
+                            {
+                                "var": "a"
+                            },
+                            {
+                                "var": "b"
+                            }
+                        ]
+                    }
+                ]
             },
             {
                 "op": "funcao",
                 "args": [
-                    "area"
-                ],
-                "parametros": [
+                    "area",
+                    [
+                        {
+                            "var": "c"
+                        }
+                    ],
                     {
-                        "var": "c"
-                    }
-                ],
-                "corpo": {
-                    "op": "call_func",
-                    "args": [
-                        "area",
-                        [
-                            {
-                                "var": "c"
-                            },
-                            {
-                                "var": "c"
-                            }
+                        "op": "call_func",
+                        "args": [
+                            "area",
+                            [
+                                {
+                                    "var": "c"
+                                },
+                                {
+                                    "var": "c"
+                                }
+                            ]
                         ]
-                    ]
-                }
+                    }
+                ]
             },
             {
                 "op": "atribuicao",
@@ -600,12 +596,14 @@
                         "op": "call_func",
                         "args": [
                             "area",
-                            {
-                                "op": "int",
-                                "args": [
-                                    "30"
-                                ]
-                            }
+                            [
+                                {
+                                    "op": "int",
+                                    "args": [
+                                        "30"
+                                    ]
+                                }
+                            ]
                         ]
                     }
                 ]
@@ -618,56 +616,53 @@
             {
                 "op": "funcao",
                 "args": [
-                    "fib"
-                ],
-                "parametros": [
+                    "fib",
+                    [
+                        {
+                            "op": "int",
+                            "args": [
+                                "0"
+                            ]
+                        }
+                    ],
                     {
                         "op": "int",
                         "args": [
                             "0"
                         ]
                     }
-                ],
-                "corpo": {
-                    "op": "int",
-                    "args": [
-                        "0"
-                    ]
-                }
+                ]
             },
             {
                 "op": "funcao",
                 "args": [
-                    "fib"
-                ],
-                "parametros": [
+                    "fib",
+                    [
+                        {
+                            "op": "int",
+                            "args": [
+                                "1"
+                            ]
+                        }
+                    ],
                     {
                         "op": "int",
                         "args": [
-                            "1"
+                            "0"
                         ]
                     }
-                ],
-                "corpo": {
-                    "op": "int",
-                    "args": [
-                        "0"
-                    ]
-                }
+                ]
             },
             {
                 "op": "funcao",
                 "args": [
-                    "fib"
-                ],
-                "parametros": [
+                    "fib",
+                    [
+                        {
+                            "var": "n"
+                        }
+                    ],
                     {
-                        "var": "n"
-                    }
-                ],
-                "corpo": {
-                    "op": "corpo_funcao",
-                    "args": {
                         "op": "seq",
                         "args": [
                             {
@@ -678,20 +673,22 @@
                                         "op": "call_func",
                                         "args": [
                                             "fib",
-                                            {
-                                                "op": "-",
-                                                "args": [
-                                                    {
-                                                        "var": "n"
-                                                    },
-                                                    {
-                                                        "op": "int",
-                                                        "args": [
-                                                            "1"
-                                                        ]
-                                                    }
-                                                ]
-                                            }
+                                            [
+                                                {
+                                                    "op": "-",
+                                                    "args": [
+                                                        {
+                                                            "var": "n"
+                                                        },
+                                                        {
+                                                            "op": "int",
+                                                            "args": [
+                                                                "1"
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
                                         ]
                                     }
                                 ]
@@ -704,20 +701,22 @@
                                         "op": "call_func",
                                         "args": [
                                             "fib",
-                                            {
-                                                "op": "-",
-                                                "args": [
-                                                    {
-                                                        "var": "n"
-                                                    },
-                                                    {
-                                                        "op": "int",
-                                                        "args": [
-                                                            "2"
-                                                        ]
-                                                    }
-                                                ]
-                                            }
+                                            [
+                                                {
+                                                    "op": "-",
+                                                    "args": [
+                                                        {
+                                                            "var": "n"
+                                                        },
+                                                        {
+                                                            "op": "int",
+                                                            "args": [
+                                                                "2"
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
                                         ]
                                     }
                                 ]
@@ -735,7 +734,7 @@
                             }
                         ]
                     }
-                }
+                ]
             },
             {
                 "op": "atribuicao",
@@ -745,12 +744,14 @@
                         "op": "call_func",
                         "args": [
                             "fib",
-                            {
-                                "op": "int",
-                                "args": [
-                                    "5"
-                                ]
-                            }
+                            [
+                                {
+                                    "op": "int",
+                                    "args": [
+                                        "5"
+                                    ]
+                                }
+                            ]
                         ]
                     }
                 ]
@@ -835,52 +836,52 @@
             {
                 "op": "funcao",
                 "args": [
-                    "mais2"
-                ],
-                "parametros": [
-                    {
-                        "var": "x"
-                    }
-                ],
-                "corpo": {
-                    "op": "+",
-                    "args": [
+                    "mais2",
+                    [
                         {
                             "var": "x"
-                        },
-                        {
-                            "op": "int",
-                            "args": [
-                                "2"
-                            ]
                         }
-                    ]
-                }
+                    ],
+                    {
+                        "op": "+",
+                        "args": [
+                            {
+                                "var": "x"
+                            },
+                            {
+                                "op": "int",
+                                "args": [
+                                    "2"
+                                ]
+                            }
+                        ]
+                    }
+                ]
             },
             {
                 "op": "funcao",
                 "args": [
-                    "soma"
-                ],
-                "parametros": [
-                    {
-                        "var": "a"
-                    },
-                    {
-                        "var": "b"
-                    }
-                ],
-                "corpo": {
-                    "op": "+",
-                    "args": [
+                    "soma",
+                    [
                         {
                             "var": "a"
                         },
                         {
                             "var": "b"
                         }
-                    ]
-                }
+                    ],
+                    {
+                        "op": "+",
+                        "args": [
+                            {
+                                "var": "a"
+                            },
+                            {
+                                "var": "b"
+                            }
+                        ]
+                    }
+                ]
             },
             {
                 "op": "atribuicao",
@@ -889,9 +890,7 @@
                     {
                         "op": "map",
                         "args": [
-                            {
-                                "var": "mais2"
-                            },
+                            "mais2",
                             []
                         ]
                     }
@@ -904,9 +903,7 @@
                     {
                         "op": "map",
                         "args": [
-                            {
-                                "var": "mais2"
-                            },
+                            "mais2",
                             {
                                 "op": "elementos_array",
                                 "args": [
@@ -941,9 +938,7 @@
                     {
                         "op": "fold",
                         "args": [
-                            {
-                                "var": "soma"
-                            },
+                            "soma",
                             {
                                 "op": "elementos_array",
                                 "args": [
@@ -1019,52 +1014,54 @@
             {
                 "op": "funcao",
                 "args": [
-                    "somatorio"
-                ],
-                "parametros": [
+                    "somatorio",
+                    [
+                        {
+                            "op": "array_vazio",
+                            "args": []
+                        }
+                    ],
                     {
-                        "op": "array_vazio",
-                        "args": []
+                        "op": "int",
+                        "args": [
+                            "0"
+                        ]
                     }
-                ],
-                "corpo": {
-                    "op": "int",
-                    "args": [
-                        "0"
-                    ]
-                }
+                ]
             },
             {
                 "op": "funcao",
                 "args": [
-                    "somatorio"
-                ],
-                "parametros": [
-                    {
-                        "op": "var_id_array",
-                        "args": [
-                            "x",
-                            "xs"
-                        ]
-                    }
-                ],
-                "corpo": {
-                    "op": "+",
-                    "args": [
+                    "somatorio",
+                    [
                         {
-                            "var": "x"
-                        },
-                        {
-                            "op": "call_func",
+                            "op": "var_id_array",
                             "args": [
-                                "somatorio",
-                                {
-                                    "var": "xs"
-                                }
+                                "x",
+                                "xs"
                             ]
                         }
-                    ]
-                }
+                    ],
+                    {
+                        "op": "+",
+                        "args": [
+                            {
+                                "var": "x"
+                            },
+                            {
+                                "op": "call_func",
+                                "args": [
+                                    "somatorio",
+                                    [
+                                        {
+                                            "var": "xs"
+                                        }
+                                    ]
+                                ]
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     },
@@ -1341,41 +1338,38 @@
             {
                 "op": "funcao",
                 "args": [
-                    "soma"
-                ],
-                "parametros": [
-                    {
-                        "var": "a"
-                    },
-                    {
-                        "var": "b"
-                    }
-                ],
-                "corpo": {
-                    "op": "+",
-                    "args": [
+                    "soma",
+                    [
                         {
                             "var": "a"
                         },
                         {
                             "var": "b"
                         }
-                    ]
-                }
+                    ],
+                    {
+                        "op": "+",
+                        "args": [
+                            {
+                                "var": "a"
+                            },
+                            {
+                                "var": "b"
+                            }
+                        ]
+                    }
+                ]
             },
             {
                 "op": "funcao",
                 "args": [
-                    "soma2"
-                ],
-                "parametros": [
+                    "soma2",
+                    [
+                        {
+                            "var": "c"
+                        }
+                    ],
                     {
-                        "var": "c"
-                    }
-                ],
-                "corpo": {
-                    "op": "corpo_funcao",
-                    "args": {
                         "op": "seq",
                         "args": [
                             {
@@ -1414,7 +1408,7 @@
                             }
                         ]
                     }
-                }
+                ]
             },
             {
                 "op": "atribuicao",
@@ -1450,8 +1444,91 @@
                         "op": "call_func",
                         "args": [
                             "soma2",
+                            [
+                                {
+                                    "var": "seis"
+                                }
+                            ]
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    "lista2 = map( mais2, [ 1, 2, 3 ] );\n            lista3 = FOLD( soma, [ 1, 2, 3 ], 0 ); ": {
+        "op": "seq",
+        "args": [
+            {
+                "op": "atribuicao",
+                "args": [
+                    "lista2",
+                    {
+                        "op": "map",
+                        "args": [
+                            "mais2",
                             {
-                                "var": "seis"
+                                "op": "elementos_array",
+                                "args": [
+                                    {
+                                        "op": "int",
+                                        "args": [
+                                            "1"
+                                        ]
+                                    },
+                                    {
+                                        "op": "int",
+                                        "args": [
+                                            "2"
+                                        ]
+                                    },
+                                    {
+                                        "op": "int",
+                                        "args": [
+                                            "3"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "op": "atribuicao",
+                "args": [
+                    "lista3",
+                    {
+                        "op": "fold",
+                        "args": [
+                            "soma",
+                            {
+                                "op": "elementos_array",
+                                "args": [
+                                    {
+                                        "op": "int",
+                                        "args": [
+                                            "1"
+                                        ]
+                                    },
+                                    {
+                                        "op": "int",
+                                        "args": [
+                                            "2"
+                                        ]
+                                    },
+                                    {
+                                        "op": "int",
+                                        "args": [
+                                            "3"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "op": "int",
+                                "args": [
+                                    "0"
+                                ]
                             }
                         ]
                     }

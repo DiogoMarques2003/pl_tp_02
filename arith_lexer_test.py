@@ -119,3 +119,13 @@ while True:
     if not tk:
         break
     print(tk, end="")
+
+print("\n-------\n")
+al.input("""lista2 = map( mais2, [ 1, 2, 3 ] );
+lista3 = FOLD( soma, [ 1, 2, 3 ], 0 ); """)
+
+while True:
+    tk = al.token()
+    if not tk:
+        break
+    print(tk, end="")
