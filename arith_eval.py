@@ -114,7 +114,7 @@ class ArithEval:
                 for param, value in zip(parametros_funcao, parametros_chamada):
                     # Se o parametro da função for uma var adicionamos o valor que estamos a passar na chamada
                     if 'var' in param:
-                        funcao_symbols[param['var']] = ArithEval.evaluate(value)
+                        funcao_symbols[param['var']] = value
                     # Se for um var:array pegamos no 1º valor do array e depois passamos o resto do array
                     elif 'op' in param and param['op'] == 'var_id_array':
                         # Validar se é realmente um array
@@ -124,7 +124,7 @@ class ArithEval:
                         funcao_symbols[param['args'][0]] = value.pop()  # Remover o 1º elemento do array
                         funcao_symbols[param['args'][1]] = value  # Passar o resto dos elementos do array
                     # Se o parametro for um numero e for igual ao que estamos a passar nós avançamos
-                    elif 'op' in param and ArithEval.evaluate(param) == ArithEval.evaluate(value):
+                    elif 'op' in param and ArithEval.evaluate(param) == value:
                         continue
                     else:
                         break
