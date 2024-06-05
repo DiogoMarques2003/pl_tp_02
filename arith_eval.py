@@ -117,14 +117,12 @@ class ArithEval:
                         funcao_symbols[param['var']] = ArithEval.evaluate(value)
                     # Se for um var:array pegamos no 1º valor do array e depois passamos o resto do array
                     elif 'op' in param and param['op'] == 'var_id_array':
-                        array = ArithEval.evaluate(value) # Obter os dados do array
-
                         # Validar se é realmente um array
-                        if type(array) is not list:
+                        if type(value) is not list:
                             raise Exception(f"O parametro da função {nome_funcao} tem de ser um array")
 
-                        funcao_symbols[param['args'][0]] = array.pop()  # Remover o 1º elemento do array
-                        funcao_symbols[param['args'][1]] = array  # Passar o resto dos elementos do array
+                        funcao_symbols[param['args'][0]] = value.pop()  # Remover o 1º elemento do array
+                        funcao_symbols[param['args'][1]] = value  # Passar o resto dos elementos do array
                     # Se o parametro for um numero e for igual ao que estamos a passar nós avançamos
                     elif 'op' in param and ArithEval.evaluate(param) == ArithEval.evaluate(value):
                         continue
