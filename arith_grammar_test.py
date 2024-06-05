@@ -45,7 +45,7 @@ exemplos = [ # exemplos a avaliar de forma independente...
 valor2 = 20;
 SE valor1 <= valor2 && 1 == 1:
     ESCREVER("Menor");
-SENAOSE:
+SENAO:
     ESCREVER("Maior ou igual");
 FIM"""
             ]

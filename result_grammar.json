@@ -1555,36 +1555,102 @@
             }
         ]
     },
-    "valor1 <= valor2 && 1 == 1;": {
+    "valor1 = 20;\nvalor2 = 20;\nSE valor1 <= valor2 && 1 == 1:\n    ESCREVER(\"Menor\");\nSENAO:\n    ESCREVER(\"Maior ou igual\");\nFIM": {
         "op": "seq",
         "args": [
             {
-                "op": "&&",
+                "op": "atribuicao",
+                "args": [
+                    "valor1",
+                    {
+                        "op": "int",
+                        "args": [
+                            "20"
+                        ]
+                    }
+                ]
+            },
+            {
+                "op": "atribuicao",
+                "args": [
+                    "valor2",
+                    {
+                        "op": "int",
+                        "args": [
+                            "20"
+                        ]
+                    }
+                ]
+            },
+            {
+                "op": "se",
                 "args": [
                     {
-                        "op": "<=",
+                        "op": "&&",
                         "args": [
                             {
-                                "var": "valor1"
+                                "op": "<=",
+                                "args": [
+                                    {
+                                        "var": "valor1"
+                                    },
+                                    {
+                                        "var": "valor2"
+                                    }
+                                ]
                             },
                             {
-                                "var": "valor2"
+                                "op": "==",
+                                "args": [
+                                    {
+                                        "op": "int",
+                                        "args": [
+                                            "1"
+                                        ]
+                                    },
+                                    {
+                                        "op": "int",
+                                        "args": [
+                                            "1"
+                                        ]
+                                    }
+                                ]
                             }
                         ]
                     },
                     {
-                        "op": "==",
+                        "op": "seq",
                         "args": [
                             {
-                                "op": "int",
+                                "op": "escrever",
                                 "args": [
-                                    "1"
+                                    {
+                                        "op": "string",
+                                        "args": [
+                                            "Menor"
+                                        ]
+                                    }
                                 ]
-                            },
+                            }
+                        ]
+                    },
+                    {
+                        "op": "senao",
+                        "args": [
                             {
-                                "op": "int",
+                                "op": "seq",
                                 "args": [
-                                    "1"
+                                    {
+                                        "op": "escrever",
+                                        "args": [
+                                            {
+                                                "op": "string",
+                                                "args": [
+                                                    "Maior ou igual"
+                                                ]
+                                            }
+                                        ]
+                                    }
                                 ]
                             }
                         ]
